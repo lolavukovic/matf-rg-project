@@ -1,6 +1,10 @@
 {
   "resources": {
     "models": {
+      "tree" : {
+        "path": "Tree/RedDeliciousApple.obj",
+        "flip_uvs": true
+      }
     }
   },
   "window": {
