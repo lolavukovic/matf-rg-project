@@ -4,6 +4,10 @@
       "tree" : {
         "path": "Tree/RedDeliciousApple.obj",
         "flip_uvs": true
+      },
+      "house": {
+        "path": "House/cottage_blender.obj",
+        "flip_uvs": true
       }
     }
   },

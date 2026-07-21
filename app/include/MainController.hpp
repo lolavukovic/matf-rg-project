@@ -19,6 +19,7 @@ private:
     void initialize() override;
     bool loop() override;
     void draw_tree();
+    void draw_house();
     void begin_draw() override;
     void draw() override;
     void end_draw() override;
