@@ -62,10 +62,7 @@ void MainController::draw_tree() {
 }
 
 void MainController::update_camera() {
-    auto gui_controller=engine::core::Controller::get<GUIController>();
-    if (!gui_controller->is_enabled()) {
-        return;
-    }
+
     auto platform=engine::core::Controller::get<engine::platform::PlatformController>();
     auto graphics=engine::core::Controller::get<engine::graphics::GraphicsController>();
 
@@ -99,9 +96,19 @@ void MainController::begin_draw() {
     engine::graphics::OpenGL::clear_buffers();
 }
 
+void MainController::draw_skybox() {
+    auto resouces= engine::core::Controller::get<engine::resources::ResourcesController>();
+    auto skybox= resouces->skybox("skybox");
+    auto shader=resouces->shader("skybox");
+    auto graphics=engine::core::Controller::get<engine::graphics::GraphicsController>();
+    graphics->draw_skybox(shader, skybox);
+}
+
+
 void MainController::draw() {
     //clear_buffers
     draw_tree();
+    draw_skybox();
     //swap_buffers
 }
 

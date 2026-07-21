@@ -24,6 +24,7 @@ private:
     void end_draw() override;
     void update() override;
     void update_camera();
+    void draw_skybox();
 };
 };
 
