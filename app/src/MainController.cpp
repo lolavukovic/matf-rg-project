@@ -13,6 +13,8 @@
 #include <engine/core/Engine.hpp>
 #include <engine/graphics/GraphicsController.hpp>
 
+float beeAngle=0.0f;
+
 namespace app {
 class MainPlatformEventObserver : public engine::platform::PlatformEventObserver {
 public:
@@ -50,14 +52,15 @@ void MainController::draw_tree() {
     engine::resources::Model* tree=resources->model("tree");
     //Shader
     engine::resources::Shader* shader=resources->shader("basic");
-
     shader->use();
     shader->set_mat4("projection", graphics->projection_matrix());
     shader->set_mat4("view", graphics->camera()->view_matrix());
+
     glm::mat4 model=glm::mat4(1.0f);
     model=glm::translate(model, glm::vec3(0.0f, -1.0f, -4.0f));
     model=glm::scale(model, glm::vec3(0.15f));
     shader->set_mat4("model", model);
+
     tree->draw(shader);
 }
 
@@ -75,6 +78,7 @@ void MainController::draw_house() {
     shader->set_mat4("view", graphics->camera()->view_matrix());
     glm::mat4 model=glm::mat4(1.0f);
     model=glm::translate(model, glm::vec3(2.5f, -1.0f, -4.0f));
+    model=glm::rotate(model, glm::radians(10.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     model=glm::scale(model, glm::vec3(0.083f));
     shader->set_mat4("model", model);
     house->draw(shader);
@@ -88,11 +92,18 @@ void MainController::draw_bee() {
     //Shader
     engine::resources::Shader* shader=resources->shader("bee");
 
+    float radius = 0.8f;
+
+    float x = radius * cos(beeAngle);
+    float z = -3.0f + radius * sin(beeAngle);
+    float y = 1.3f + 0.1f * sin(beeAngle * 4.0f);
+
     shader->use();
     shader->set_mat4("projection", graphics->projection_matrix());
     shader->set_mat4("view", graphics->camera()->view_matrix());
     glm::mat4 model=glm::mat4(1.0f);
-    model=glm::translate(model, glm::vec3(1.5f, 1.3f, -4.0f));
+    model=glm::translate(model, glm::vec3(x,y,z));
+    model=glm::rotate(model, glm::radians(-70.0f), glm::vec3(1.0f, 0.0f, 0.0f));
     model=glm::scale(model, glm::vec3(0.033f));
     shader->set_mat4("model", model);
     bee->draw(shader);
@@ -145,6 +156,9 @@ void MainController::update_camera() {
 
 void MainController::update() {
     update_camera();
+
+    auto platform = engine::core::Controller::get<engine::platform::PlatformController>();
+    beeAngle += platform->dt();
 }
 
 
