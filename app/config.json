@@ -8,6 +8,14 @@
       "house": {
         "path": "House/cottage_blender.obj",
         "flip_uvs": true
+      },
+      "bee": {
+        "path": "Bee/10006_Bumblebee_v1_L3.obj",
+        "flip_uvs": true
+      },
+      "lamp": {
+        "path": "Lamp/Street_Lamp_7.obj",
+        "flip_uvs": true
       }
     }
   },

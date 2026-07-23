@@ -20,6 +20,8 @@ private:
     bool loop() override;
     void draw_tree();
     void draw_house();
+    void draw_bee();
+    void draw_lamp();
     void begin_draw() override;
     void draw() override;
     void end_draw() override;

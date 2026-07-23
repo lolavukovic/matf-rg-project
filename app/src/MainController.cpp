@@ -55,7 +55,7 @@ void MainController::draw_tree() {
     shader->set_mat4("projection", graphics->projection_matrix());
     shader->set_mat4("view", graphics->camera()->view_matrix());
     glm::mat4 model=glm::mat4(1.0f);
-    model=glm::translate(model, glm::vec3(0.0f, -1.0f, -3.0f));
+    model=glm::translate(model, glm::vec3(0.0f, -1.0f, -4.0f));
     model=glm::scale(model, glm::vec3(0.15f));
     shader->set_mat4("model", model);
     tree->draw(shader);
@@ -66,7 +66,7 @@ void MainController::draw_house() {
     //Model
     auto resources=engine::core::Controller::get<engine::resources::ResourcesController>();
     auto graphics=engine::core::Controller::get<engine::graphics::GraphicsController>();
-    engine::resources::Model* tree=resources->model("house");
+    engine::resources::Model* house=resources->model("house");
     //Shader
     engine::resources::Shader* shader=resources->shader("house");
 
@@ -74,11 +74,48 @@ void MainController::draw_house() {
     shader->set_mat4("projection", graphics->projection_matrix());
     shader->set_mat4("view", graphics->camera()->view_matrix());
     glm::mat4 model=glm::mat4(1.0f);
-    model=glm::translate(model, glm::vec3(2.5f, -1.0f, -3.0f));
+    model=glm::translate(model, glm::vec3(2.5f, -1.0f, -4.0f));
     model=glm::scale(model, glm::vec3(0.083f));
     shader->set_mat4("model", model);
-    tree->draw(shader);
+    house->draw(shader);
 }
+
+void MainController::draw_bee() {
+    //Model
+    auto resources=engine::core::Controller::get<engine::resources::ResourcesController>();
+    auto graphics=engine::core::Controller::get<engine::graphics::GraphicsController>();
+    engine::resources::Model* bee=resources->model("bee");
+    //Shader
+    engine::resources::Shader* shader=resources->shader("bee");
+
+    shader->use();
+    shader->set_mat4("projection", graphics->projection_matrix());
+    shader->set_mat4("view", graphics->camera()->view_matrix());
+    glm::mat4 model=glm::mat4(1.0f);
+    model=glm::translate(model, glm::vec3(1.5f, 1.3f, -4.0f));
+    model=glm::scale(model, glm::vec3(0.033f));
+    shader->set_mat4("model", model);
+    bee->draw(shader);
+}
+
+void MainController::draw_lamp() {
+    //Model
+    auto resources=engine::core::Controller::get<engine::resources::ResourcesController>();
+    auto graphics=engine::core::Controller::get<engine::graphics::GraphicsController>();
+    engine::resources::Model* lamp=resources->model("lamp");
+    //Shader
+    engine::resources::Shader* shader=resources->shader("lamp");
+
+    shader->use();
+    shader->set_mat4("projection", graphics->projection_matrix());
+    shader->set_mat4("view", graphics->camera()->view_matrix());
+    glm::mat4 model=glm::mat4(1.0f);
+    model=glm::translate(model, glm::vec3(1.3f, -1.0f, -2.8f));
+    model=glm::scale(model, glm::vec3(0.823f));
+    shader->set_mat4("model", model);
+    lamp->draw(shader);
+}
+
 
 void MainController::update_camera() {
 
@@ -128,6 +165,8 @@ void MainController::draw() {
     //clear_buffers
     draw_tree();
     draw_house();
+    draw_bee();
+    draw_lamp();
     draw_skybox();
     //swap_buffers
 }
