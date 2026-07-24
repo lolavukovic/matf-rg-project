@@ -2,7 +2,7 @@
   "resources": {
     "models": {
       "tree" : {
-        "path": "Tree/RedDeliciousApple.obj",
+        "path": "Tree/untitled.obj",
         "flip_uvs": true
       },
       "house": {
