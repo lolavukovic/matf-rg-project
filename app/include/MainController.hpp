@@ -5,6 +5,9 @@
 #ifndef MATF_RG_PROJECT_MAINCONTROLLER_HPP
 #define MATF_RG_PROJECT_MAINCONTROLLER_HPP
 
+#include "glm/vec3.hpp"
+
+
 #include <engine/core/Controller.hpp>
 #include <engine/platform/Input.hpp>
 #include <engine/platform/PlatformEventObserver.hpp>
@@ -15,6 +18,12 @@ public:
     std::string_view name() const override {
         return "app::MainController";
     }
+    float ambientStrength=0.7f;
+    float diffuseStrength=1.0f;
+    float specularStrength=1.0f;
+
+    glm::vec3 lightDirection=glm::vec3(0.7f, -1.0f, -0.3f);
+
 private:
     void initialize() override;
     bool loop() override;
@@ -28,6 +37,8 @@ private:
     void update() override;
     void update_camera();
     void draw_skybox();
+    float sunAngle=0.0f;
+    float sunSpeed=1.0f;
 };
 };
 

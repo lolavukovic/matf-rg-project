@@ -62,10 +62,11 @@ void MainController::draw_tree() {
     shader->set_float("material.specular", 0.0f);
     shader->set_float("material.shiness", 8.0f);
 
-    shader->set_vec3("light.direction", glm::vec3(0.7f, -1.0f, -0.3f));
-    shader->set_vec3("light.ambient", glm::vec3(0.5f, 0.5f, 0.5f));
-    shader->set_vec3("light.diffuse", glm::vec3(1.0f, 1.0f, 1.0f));
-    shader->set_vec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+
+    shader->set_vec3("light.direction", lightDirection);
+    shader->set_vec3("light.ambient", glm::vec3(ambientStrength));
+    shader->set_vec3("light.diffuse", glm::vec3(diffuseStrength));
+    shader->set_vec3("light.specular", glm::vec3(specularStrength));
 
     glm::mat4 model=glm::mat4(1.0f);
     model=glm::translate(model, glm::vec3(0.0f, -1.0f, -4.0f));
@@ -95,10 +96,10 @@ void MainController::draw_house() {
     shader->set_float("material.specular", 0.5f);
     shader->set_float("material.shiness", 32.0f);
 
-    shader->set_vec3("light.direction", glm::vec3(0.7f, -1.0f, -0.3f));
-    shader->set_vec3("light.ambient", glm::vec3(0.5f, 0.5f, 0.5f));
-    shader->set_vec3("light.diffuse", glm::vec3(1.0f, 1.0f, 1.0f));
-    shader->set_vec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+    shader->set_vec3("light.direction", lightDirection);
+    shader->set_vec3("light.ambient", glm::vec3(ambientStrength));
+    shader->set_vec3("light.diffuse", glm::vec3(diffuseStrength));
+    shader->set_vec3("light.specular", glm::vec3(specularStrength));
 
     glm::mat4 model=glm::mat4(1.0f);
     model=glm::translate(model, glm::vec3(2.5f, -1.0f, -4.0f));
@@ -132,10 +133,10 @@ void MainController::draw_bee() {
     shader->set_float("material.specular", 0.5f);
     shader->set_float("material.shiness", 32.0f);
 
-    shader->set_vec3("light.direction", glm::vec3(0.7f, -1.0f, -0.3f));
-    shader->set_vec3("light.ambient", glm::vec3(0.5f, 0.5f, 0.5f));
-    shader->set_vec3("light.diffuse", glm::vec3(1.0f, 1.0f, 1.0f));
-    shader->set_vec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+    shader->set_vec3("light.direction", lightDirection);
+    shader->set_vec3("light.ambient", glm::vec3(ambientStrength));
+    shader->set_vec3("light.diffuse", glm::vec3(diffuseStrength));
+    shader->set_vec3("light.specular", glm::vec3(specularStrength));
 
     glm::mat4 model=glm::mat4(1.0f);
     model=glm::translate(model, glm::vec3(x,y,z));
@@ -163,10 +164,10 @@ void MainController::draw_lamp() {
     shader->set_float("material.specular", 0.8f);
     shader->set_float("material.shiness", 32.0f);
 
-    shader->set_vec3("light.direction", glm::vec3(0.7f, -1.0f, -0.3f));
-    shader->set_vec3("light.ambient", glm::vec3(0.5f, 0.5f, 0.5f));
-    shader->set_vec3("light.diffuse", glm::vec3(1.0f, 1.0f, 1.0f));
-    shader->set_vec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+    shader->set_vec3("light.direction", lightDirection);
+    shader->set_vec3("light.ambient", glm::vec3(ambientStrength));
+    shader->set_vec3("light.diffuse", glm::vec3(diffuseStrength));
+    shader->set_vec3("light.specular", glm::vec3(specularStrength));
 
     glm::mat4 model=glm::mat4(1.0f);
     model=glm::translate(model, glm::vec3(1.3f, -1.0f, -2.8f));
@@ -206,7 +207,10 @@ void MainController::update() {
     update_camera();
 
     auto platform = engine::core::Controller::get<engine::platform::PlatformController>();
-    beeAngle += platform->dt();
+    float dt=platform->dt();
+
+    beeAngle += dt;
+    sunAngle += dt*0.2;
 }
 
 
