@@ -51,18 +51,30 @@ void MainController::draw_tree() {
     auto graphics=engine::core::Controller::get<engine::graphics::GraphicsController>();
     engine::resources::Model* tree=resources->model("tree");
     //Shader
-    engine::resources::Shader* shader=resources->shader("basic");
+    engine::resources::Shader* shader=resources->shader("light");
     shader->use();
     shader->set_mat4("projection", graphics->projection_matrix());
     shader->set_mat4("view", graphics->camera()->view_matrix());
 
+    shader->set_vec3("viewPos", graphics->camera()->Position);
+    shader->set_float("material.ambient", 0.3f);
+    shader->set_float("material.diffuse", 1.0f);
+    shader->set_float("material.specular", 0.0f);
+    shader->set_float("material.shiness", 8.0f);
+
+    shader->set_vec3("light.direction", glm::vec3(0.7f, -1.0f, -0.3f));
+    shader->set_vec3("light.ambient", glm::vec3(0.5f, 0.5f, 0.5f));
+    shader->set_vec3("light.diffuse", glm::vec3(1.0f, 1.0f, 1.0f));
+    shader->set_vec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+
     glm::mat4 model=glm::mat4(1.0f);
     model=glm::translate(model, glm::vec3(0.0f, -1.0f, -4.0f));
-    model=glm::scale(model, glm::vec3(0.15f));
+    model=glm::scale(model, glm::vec3(0.65f));
     shader->set_mat4("model", model);
 
     tree->draw(shader);
 }
+
 
 
 void MainController::draw_house() {
@@ -71,11 +83,23 @@ void MainController::draw_house() {
     auto graphics=engine::core::Controller::get<engine::graphics::GraphicsController>();
     engine::resources::Model* house=resources->model("house");
     //Shader
-    engine::resources::Shader* shader=resources->shader("house");
+    engine::resources::Shader* shader=resources->shader("light");
 
     shader->use();
     shader->set_mat4("projection", graphics->projection_matrix());
     shader->set_mat4("view", graphics->camera()->view_matrix());
+
+    shader->set_vec3("viewPos", graphics->camera()->Position);
+    shader->set_float("material.ambient", 0.3f);
+    shader->set_float("material.diffuse", 1.0f);
+    shader->set_float("material.specular", 0.5f);
+    shader->set_float("material.shiness", 32.0f);
+
+    shader->set_vec3("light.direction", glm::vec3(0.7f, -1.0f, -0.3f));
+    shader->set_vec3("light.ambient", glm::vec3(0.5f, 0.5f, 0.5f));
+    shader->set_vec3("light.diffuse", glm::vec3(1.0f, 1.0f, 1.0f));
+    shader->set_vec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+
     glm::mat4 model=glm::mat4(1.0f);
     model=glm::translate(model, glm::vec3(2.5f, -1.0f, -4.0f));
     model=glm::rotate(model, glm::radians(10.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -90,7 +114,7 @@ void MainController::draw_bee() {
     auto graphics=engine::core::Controller::get<engine::graphics::GraphicsController>();
     engine::resources::Model* bee=resources->model("bee");
     //Shader
-    engine::resources::Shader* shader=resources->shader("bee");
+    engine::resources::Shader* shader=resources->shader("light");
 
     float radius = 0.8f;
 
@@ -101,6 +125,18 @@ void MainController::draw_bee() {
     shader->use();
     shader->set_mat4("projection", graphics->projection_matrix());
     shader->set_mat4("view", graphics->camera()->view_matrix());
+
+    shader->set_vec3("viewPos", graphics->camera()->Position);
+    shader->set_float("material.ambient", 0.3f);
+    shader->set_float("material.diffuse", 1.0f);
+    shader->set_float("material.specular", 0.5f);
+    shader->set_float("material.shiness", 32.0f);
+
+    shader->set_vec3("light.direction", glm::vec3(0.7f, -1.0f, -0.3f));
+    shader->set_vec3("light.ambient", glm::vec3(0.5f, 0.5f, 0.5f));
+    shader->set_vec3("light.diffuse", glm::vec3(1.0f, 1.0f, 1.0f));
+    shader->set_vec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+
     glm::mat4 model=glm::mat4(1.0f);
     model=glm::translate(model, glm::vec3(x,y,z));
     model=glm::rotate(model, glm::radians(-70.0f), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -115,11 +151,23 @@ void MainController::draw_lamp() {
     auto graphics=engine::core::Controller::get<engine::graphics::GraphicsController>();
     engine::resources::Model* lamp=resources->model("lamp");
     //Shader
-    engine::resources::Shader* shader=resources->shader("lamp");
+    engine::resources::Shader* shader=resources->shader("light");
 
     shader->use();
     shader->set_mat4("projection", graphics->projection_matrix());
     shader->set_mat4("view", graphics->camera()->view_matrix());
+
+    shader->set_vec3("viewPos", graphics->camera()->Position);
+    shader->set_float("material.ambient", 0.3f);
+    shader->set_float("material.diffuse", 1.0f);
+    shader->set_float("material.specular", 0.8f);
+    shader->set_float("material.shiness", 32.0f);
+
+    shader->set_vec3("light.direction", glm::vec3(0.7f, -1.0f, -0.3f));
+    shader->set_vec3("light.ambient", glm::vec3(0.5f, 0.5f, 0.5f));
+    shader->set_vec3("light.diffuse", glm::vec3(1.0f, 1.0f, 1.0f));
+    shader->set_vec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+
     glm::mat4 model=glm::mat4(1.0f);
     model=glm::translate(model, glm::vec3(1.3f, -1.0f, -2.8f));
     model=glm::scale(model, glm::vec3(0.823f));
