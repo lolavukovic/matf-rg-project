@@ -79,11 +79,18 @@ void MainController::draw_tree() {
     shader->set_float("spotlight.linear", 0.07f);
     shader->set_float("spotlight.quadratic", 0.032f);
 
-    shader->set_vec3 ("spotlight.color",glm::vec3(1.0f, 0.8f, 0.3f));
+    if (spotlightEnabled) {
+        shader->set_vec3("spotlight.ambient", glm::vec3(0.0f, 0.0f, 0.0f));
+        shader->set_vec3("spotlight.diffuse", glm::vec3(3.0f, 3.0f, 3.0f));
+        shader->set_vec3("spotlight.specular", glm::vec3(3.0f, 3.0f, 3.0f));
 
-    shader->set_vec3("spotlight.ambient", glm::vec3(0.0f, 0.0f, 0.0f));
-    shader->set_vec3("spotlight.diffuse", glm::vec3(3.0f, 3.0f, 3.0f));
-    shader->set_vec3("spotlight.specular", glm::vec3(3.0f, 3.0f, 3.0f));
+        shader->set_vec3 ("spotlight.color",glm::vec3(1.0f, 0.8f, 0.3f));
+    }
+    else {
+        shader->set_vec3("spotlight.ambient", glm::vec3(0.0f, 0.0f, 0.0f));
+        shader->set_vec3("spotlight.diffuse", glm::vec3(0.0f));
+        shader->set_vec3("spotlight.specular", glm::vec3(0.0f));
+    }
 
     glm::mat4 model=glm::mat4(1.0f);
     model=glm::translate(model, glm::vec3(0.0f, -1.0f, -4.0f));
@@ -129,12 +136,18 @@ void MainController::draw_house() {
     shader->set_float("spotlight.linear", 0.07f);
     shader->set_float("spotlight.quadratic", 0.032f);
 
-    shader->set_vec3("spotlight.ambient", glm::vec3(0.0f, 0.0f, 0.0f));
-    shader->set_vec3("spotlight.diffuse", glm::vec3(3.0f, 3.0f, 3.0f));
-    shader->set_vec3("spotlight.specular", glm::vec3(3.0f, 3.0f, 3.0f));
+    if (spotlightEnabled) {
+        shader->set_vec3("spotlight.ambient", glm::vec3(0.0f, 0.0f, 0.0f));
+        shader->set_vec3("spotlight.diffuse", glm::vec3(3.0f, 3.0f, 3.0f));
+        shader->set_vec3("spotlight.specular", glm::vec3(3.0f, 3.0f, 3.0f));
 
-    shader->set_vec3 ("spotlight.color",glm::vec3(1.0f, 0.8f, 0.3f));
-
+        shader->set_vec3 ("spotlight.color",glm::vec3(1.0f, 0.8f, 0.3f));
+    }
+    else {
+        shader->set_vec3("spotlight.ambient", glm::vec3(0.0f, 0.0f, 0.0f));
+        shader->set_vec3("spotlight.diffuse", glm::vec3(0.0f));
+        shader->set_vec3("spotlight.specular", glm::vec3(0.0f));
+    }
     glm::mat4 model=glm::mat4(1.0f);
     model=glm::translate(model, glm::vec3(2.5f, -1.0f, -4.0f));
     model=glm::rotate(model, glm::radians(10.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -183,16 +196,23 @@ void MainController::draw_bee() {
     shader->set_float("spotlight.linear", 0.07f);
     shader->set_float("spotlight.quadratic", 0.032f);
 
-    shader->set_vec3 ("spotlight.color",glm::vec3(1.0f, 0.8f, 0.3f));
+    if (spotlightEnabled) {
+        shader->set_vec3("spotlight.ambient", glm::vec3(0.0f, 0.0f, 0.0f));
+        shader->set_vec3("spotlight.diffuse", glm::vec3(3.0f, 3.0f, 3.0f));
+        shader->set_vec3("spotlight.specular", glm::vec3(3.0f, 3.0f, 3.0f));
 
-    shader->set_vec3("spotlight.ambient", glm::vec3(0.0f, 0.0f, 0.0f));
-    shader->set_vec3("spotlight.diffuse", glm::vec3(3.0f, 3.0f, 3.0f));
-    shader->set_vec3("spotlight.specular", glm::vec3(3.0f, 3.0f, 3.0f));
+        shader->set_vec3 ("spotlight.color",glm::vec3(1.0f, 0.8f, 0.3f));
+    }
+    else {
+        shader->set_vec3("spotlight.ambient", glm::vec3(0.0f, 0.0f, 0.0f));
+        shader->set_vec3("spotlight.diffuse", glm::vec3(0.0f));
+        shader->set_vec3("spotlight.specular", glm::vec3(0.0f));
+    }
 
     glm::mat4 model=glm::mat4(1.0f);
     model=glm::translate(model, glm::vec3(x,y,z));
     model=glm::rotate(model, glm::radians(-70.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-    model=glm::scale(model, glm::vec3(0.033f));
+    model=glm::scale(model, glm::vec3(0.025f));
     shader->set_mat4("model", model);
     bee->draw(shader);
 }
@@ -232,9 +252,18 @@ void MainController::draw_lamp() {
     shader->set_float("spotlight.linear", 0.09f);
     shader->set_float("spotlight.quadratic", 0.032f);
 
-    shader->set_vec3("spotlight.ambient", glm::vec3(0.0f, 0.0f, 0.0f));
-    shader->set_vec3("spotlight.diffuse", glm::vec3(1.0f, 1.0f, 1.0f));
-    shader->set_vec3("spotlight.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+    if (spotlightEnabled) {
+        shader->set_vec3("spotlight.ambient", glm::vec3(0.0f, 0.0f, 0.0f));
+        shader->set_vec3("spotlight.diffuse", glm::vec3(3.0f, 3.0f, 3.0f));
+        shader->set_vec3("spotlight.specular", glm::vec3(3.0f, 3.0f, 3.0f));
+
+        shader->set_vec3 ("spotlight.color",glm::vec3(1.0f, 0.8f, 0.3f));
+    }
+    else {
+        shader->set_vec3("spotlight.ambient", glm::vec3(0.0f, 0.0f, 0.0f));
+        shader->set_vec3("spotlight.diffuse", glm::vec3(0.0f));
+        shader->set_vec3("spotight.specular", glm::vec3(0.0f));
+    }
 
     glm::mat4 model=glm::mat4(1.0f);
     model=glm::translate(model, glm::vec3(1.3f, -1.0f, -2.8f));
@@ -277,7 +306,22 @@ void MainController::update() {
     float dt=platform->dt();
 
     beeAngle += dt;
-    sunAngle += dt*0.2;
+    if (platform->key(engine::platform::KEY_L).state()==engine::platform::Key::State::JustPressed) {
+        lightSequenceStarted=true;
+        lightTimer=0.0f;
+        spotlightEnabled=true;
+    }
+
+    if (lightSequenceStarted) {
+        lightTimer+=dt;
+        if (lightTimer>=2.0f && lightTimer<7.0f) {
+            spotlightEnabled=false;
+        }
+        if (lightTimer>=7.0f) {
+            spotlightEnabled=true;
+            lightSequenceStarted=false;
+        }
+    }
 }
 
 

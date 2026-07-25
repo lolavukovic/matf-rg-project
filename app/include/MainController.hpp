@@ -37,8 +37,10 @@ private:
     void update() override;
     void update_camera();
     void draw_skybox();
-    float sunAngle=0.0f;
-    float sunSpeed=1.0f;
+    bool lightSequenceStarted=false;
+    bool spotlightEnabled=true;
+    float lightTimer=0.0f;
+
 };
 };
 
