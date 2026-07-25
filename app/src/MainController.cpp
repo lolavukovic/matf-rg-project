@@ -63,10 +63,27 @@ void MainController::draw_tree() {
     shader->set_float("material.shiness", 8.0f);
 
 
-    shader->set_vec3("light.direction", lightDirection);
-    shader->set_vec3("light.ambient", glm::vec3(ambientStrength));
-    shader->set_vec3("light.diffuse", glm::vec3(diffuseStrength));
-    shader->set_vec3("light.specular", glm::vec3(specularStrength));
+    shader->set_vec3("dirlight.direction", lightDirection);
+    shader->set_vec3("dirlight.ambient", glm::vec3(ambientStrength));
+    shader->set_vec3("dirlight.diffuse", glm::vec3(diffuseStrength));
+    shader->set_vec3("dirlight.specular", glm::vec3(specularStrength));
+
+
+    shader->set_vec3("spotlight.position", glm::vec3(1.3f, 2.5f, -2.8f));
+    shader->set_vec3("spotlight.direction", glm::vec3(0.0f, -1.0f, 0.0f));
+
+    shader->set_float("spotlight.cutOff", glm::cos(glm::radians(12.5f)));
+    shader->set_float("spotlight.outerCutOff", glm::cos(glm::radians(17.5f)));
+
+    shader->set_float("spotlight.constant", 1.0f);
+    shader->set_float("spotlight.linear", 0.07f);
+    shader->set_float("spotlight.quadratic", 0.032f);
+
+    shader->set_vec3 ("spotlight.color",glm::vec3(1.0f, 0.8f, 0.3f));
+
+    shader->set_vec3("spotlight.ambient", glm::vec3(0.0f, 0.0f, 0.0f));
+    shader->set_vec3("spotlight.diffuse", glm::vec3(3.0f, 3.0f, 3.0f));
+    shader->set_vec3("spotlight.specular", glm::vec3(3.0f, 3.0f, 3.0f));
 
     glm::mat4 model=glm::mat4(1.0f);
     model=glm::translate(model, glm::vec3(0.0f, -1.0f, -4.0f));
@@ -96,10 +113,27 @@ void MainController::draw_house() {
     shader->set_float("material.specular", 0.5f);
     shader->set_float("material.shiness", 32.0f);
 
-    shader->set_vec3("light.direction", lightDirection);
-    shader->set_vec3("light.ambient", glm::vec3(ambientStrength));
-    shader->set_vec3("light.diffuse", glm::vec3(diffuseStrength));
-    shader->set_vec3("light.specular", glm::vec3(specularStrength));
+    shader->set_vec3("dirlight.direction", lightDirection);
+    shader->set_vec3("dirlight.ambient", glm::vec3(ambientStrength));
+    shader->set_vec3("dirlight.diffuse", glm::vec3(diffuseStrength));
+    shader->set_vec3("dirlight.specular", glm::vec3(specularStrength));
+
+
+    shader->set_vec3("spotlight.position", glm::vec3(1.3f, 2.5f, -2.8f));
+    shader->set_vec3("spotlight.direction", glm::vec3(0.0f, -1.0f, 0.0f));
+
+    shader->set_float("spotlight.cutOff", glm::cos(glm::radians(12.5f)));
+    shader->set_float("spotlight.outerCutOff", glm::cos(glm::radians(17.5f)));
+
+    shader->set_float("spotlight.constant", 1.0f);
+    shader->set_float("spotlight.linear", 0.07f);
+    shader->set_float("spotlight.quadratic", 0.032f);
+
+    shader->set_vec3("spotlight.ambient", glm::vec3(0.0f, 0.0f, 0.0f));
+    shader->set_vec3("spotlight.diffuse", glm::vec3(3.0f, 3.0f, 3.0f));
+    shader->set_vec3("spotlight.specular", glm::vec3(3.0f, 3.0f, 3.0f));
+
+    shader->set_vec3 ("spotlight.color",glm::vec3(1.0f, 0.8f, 0.3f));
 
     glm::mat4 model=glm::mat4(1.0f);
     model=glm::translate(model, glm::vec3(2.5f, -1.0f, -4.0f));
@@ -133,10 +167,27 @@ void MainController::draw_bee() {
     shader->set_float("material.specular", 0.5f);
     shader->set_float("material.shiness", 32.0f);
 
-    shader->set_vec3("light.direction", lightDirection);
-    shader->set_vec3("light.ambient", glm::vec3(ambientStrength));
-    shader->set_vec3("light.diffuse", glm::vec3(diffuseStrength));
-    shader->set_vec3("light.specular", glm::vec3(specularStrength));
+    shader->set_vec3("dirlight.direction", lightDirection);
+    shader->set_vec3("dirlight.ambient", glm::vec3(ambientStrength));
+    shader->set_vec3("dirlight.diffuse", glm::vec3(diffuseStrength));
+    shader->set_vec3("dirlight.specular", glm::vec3(specularStrength));
+
+
+    shader->set_vec3("spotlight.position", glm::vec3(1.3f, 2.5f, -2.8f));
+    shader->set_vec3("spotlight.direction", glm::vec3(0.0f, -1.0f, 0.0f));
+
+    shader->set_float("spotlight.cutOff", glm::cos(glm::radians(12.5f)));
+    shader->set_float("spotlight.outerCutOff", glm::cos(glm::radians(17.5f)));
+
+    shader->set_float("spotlight.constant", 1.0f);
+    shader->set_float("spotlight.linear", 0.07f);
+    shader->set_float("spotlight.quadratic", 0.032f);
+
+    shader->set_vec3 ("spotlight.color",glm::vec3(1.0f, 0.8f, 0.3f));
+
+    shader->set_vec3("spotlight.ambient", glm::vec3(0.0f, 0.0f, 0.0f));
+    shader->set_vec3("spotlight.diffuse", glm::vec3(3.0f, 3.0f, 3.0f));
+    shader->set_vec3("spotlight.specular", glm::vec3(3.0f, 3.0f, 3.0f));
 
     glm::mat4 model=glm::mat4(1.0f);
     model=glm::translate(model, glm::vec3(x,y,z));
@@ -164,10 +215,26 @@ void MainController::draw_lamp() {
     shader->set_float("material.specular", 0.8f);
     shader->set_float("material.shiness", 32.0f);
 
-    shader->set_vec3("light.direction", lightDirection);
-    shader->set_vec3("light.ambient", glm::vec3(ambientStrength));
-    shader->set_vec3("light.diffuse", glm::vec3(diffuseStrength));
-    shader->set_vec3("light.specular", glm::vec3(specularStrength));
+    shader->set_vec3("dirlight.direction", lightDirection);
+    shader->set_vec3("dirlight.ambient", glm::vec3(ambientStrength));
+    shader->set_vec3("dirlight.diffuse", glm::vec3(diffuseStrength));
+    shader->set_vec3("dirlight.specular", glm::vec3(specularStrength));
+
+
+    shader->set_vec3("spotlight.position", glm::vec3(1.3f, 2.5f, -2.8f));
+    shader->set_vec3("spotlight.direction", glm::vec3(0.0f, -1.0f, 0.0f));
+    shader->set_vec3 ("spotlight.color",glm::vec3(1.0f, 0.8f, 0.3f));
+
+    shader->set_float("spotlight.cutOff", glm::cos(glm::radians(12.5f)));
+    shader->set_float("spotlight.outerCutOff", glm::cos(glm::radians(17.5f)));
+
+    shader->set_float("spotlight.constant", 1.0f);
+    shader->set_float("spotlight.linear", 0.09f);
+    shader->set_float("spotlight.quadratic", 0.032f);
+
+    shader->set_vec3("spotlight.ambient", glm::vec3(0.0f, 0.0f, 0.0f));
+    shader->set_vec3("spotlight.diffuse", glm::vec3(1.0f, 1.0f, 1.0f));
+    shader->set_vec3("spotlight.specular", glm::vec3(1.0f, 1.0f, 1.0f));
 
     glm::mat4 model=glm::mat4(1.0f);
     model=glm::translate(model, glm::vec3(1.3f, -1.0f, -2.8f));

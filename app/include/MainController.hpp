@@ -18,8 +18,8 @@ public:
     std::string_view name() const override {
         return "app::MainController";
     }
-    float ambientStrength=0.7f;
-    float diffuseStrength=1.0f;
+    float ambientStrength=0.3f;
+    float diffuseStrength=0.7f;
     float specularStrength=1.0f;
 
     glm::vec3 lightDirection=glm::vec3(0.7f, -1.0f, -0.3f);
