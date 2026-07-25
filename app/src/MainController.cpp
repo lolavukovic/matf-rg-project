@@ -35,6 +35,7 @@ void MainController::initialize() {
     auto platform = engine::core::Controller::get<engine::platform::PlatformController>();
     platform->register_platform_event_observer(std::make_unique<MainPlatformEventObserver>());
     engine::graphics::OpenGL::enable_depth_testing();
+
 }
 
 bool MainController::loop() {
@@ -272,6 +273,28 @@ void MainController::draw_lamp() {
     lamp->draw(shader);
 }
 
+void MainController::draw_bulb() {
+    auto resources = engine::core::Controller::get<engine::resources::ResourcesController>();
+    auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
+
+    engine::resources::Model* bulbModel = resources->model("cube");
+    engine::resources::Shader* bulbShader = resources->shader("bulb");
+
+    bulbShader->use();
+    bulbShader->set_mat4("projection", graphics->projection_matrix());
+    bulbShader->set_mat4("view", graphics->camera()->view_matrix());
+
+
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3(1.26f, 0.62f, -2.7f));
+    model = glm::scale(model, glm::vec3(0.028f));
+    bulbShader->set_mat4("model", model);
+
+    glm::vec3 warmYellowHDR = glm::vec3(10.0f, 8.5f, 4.0f);
+    bulbShader->set_vec3("lightColor", warmYellowHDR);
+
+    bulbModel->draw(bulbShader);
+}
 
 void MainController::update_camera() {
 
@@ -344,6 +367,7 @@ void MainController::draw() {
     draw_house();
     draw_bee();
     draw_lamp();
+    draw_bulb();
     draw_skybox();
     //swap_buffers
 }

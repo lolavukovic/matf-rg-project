@@ -16,6 +16,9 @@
       "lamp": {
         "path": "Lamp/Street_Lamp_7.obj",
         "flip_uvs": true
+      },
+      "cube": {
+        "path": "Cube/cube.obj"
       }
     }
   },

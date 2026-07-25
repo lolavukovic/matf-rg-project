@@ -31,6 +31,7 @@ private:
     void draw_house();
     void draw_bee();
     void draw_lamp();
+    void draw_bulb();
     void begin_draw() override;
     void draw() override;
     void end_draw() override;
