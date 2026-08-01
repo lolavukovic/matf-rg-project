@@ -13,7 +13,7 @@ namespace engine::graphics {
 class Bloom {
 public:
     Bloom() = default;
-    ~Bloom()=default;
+    ~Bloom()= default;
 
     void init(int width, int height);
     void begin();

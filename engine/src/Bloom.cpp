@@ -70,12 +70,15 @@ void Bloom::init(int width, int height) {
 void Bloom::begin() {
     glBindFramebuffer(GL_FRAMEBUFFER, m_hdrFBO);
     glViewport(0, 0, m_width, m_height);
+    glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void Bloom::render(engine::resources::Shader* blurShader, engine::resources::Shader* bloomShader, float exposure) {
 
     glDisable(GL_DEPTH_TEST);
+    glDisable(GL_BLEND);
+
     bool horizontal = true, first_iteration = true;
     unsigned int amount = 10;
 
@@ -104,7 +107,8 @@ void Bloom::render(engine::resources::Shader* blurShader, engine::resources::Sha
     int screenHeight = static_cast<int>(graphics->perspective_params().Height);
     glViewport(0, 0, screenWidth, screenHeight);
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     if (bloomShader) {
         bloomShader->use();
@@ -124,7 +128,16 @@ void Bloom::render(engine::resources::Shader* blurShader, engine::resources::Sha
         render_quad();
     }
 
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glBindVertexArray(0);
+
+    // Vraćanje standardnih stanja
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 }
 

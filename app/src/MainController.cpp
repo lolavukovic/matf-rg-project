@@ -4,6 +4,7 @@
 
 #include "../include/MainController.hpp"
 
+#include "../../engine/libs/glad/include/glad/glad.h"
 #include "GUIController.hpp"
 #include "spdlog/spdlog.h"
 #include <engine/graphics/Camera.hpp>
@@ -21,6 +22,7 @@ namespace app {
 class MainPlatformEventObserver : public engine::platform::PlatformEventObserver {
 public:
     void on_mouse_move(engine::platform::MousePosition position) override;
+    void on_window_resize(int width, int height) override;
 };
 
 
@@ -30,6 +32,15 @@ void MainPlatformEventObserver::on_mouse_move(engine::platform::MousePosition po
         auto camera = engine::core::Controller::get<engine::graphics::GraphicsController>()->camera();
         camera->rotate_camera(position.dx*0.2, position.dy*0.2);
     }
+}
+void MainPlatformEventObserver::on_window_resize(int width, int height) {
+    auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
+    if (!graphics) return;
+
+    graphics->perspective_params().Width = static_cast<float>(width);
+    graphics->perspective_params().Height = static_cast<float>(height);
+
+    glViewport(0,0,width,height);
 }
 
 
@@ -362,8 +373,7 @@ void MainController::update() {
 
 void MainController::begin_draw() {
     engine::graphics::OpenGL::clear_buffers();
-    auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
-    graphics->bloom_begin();
+
 }
 
 void MainController::draw_skybox() {
@@ -377,6 +387,9 @@ void MainController::draw_skybox() {
 
 void MainController::draw() {
 
+    auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
+    graphics->bloom_begin();
+
     //clear_buffers
     draw_tree();
     draw_house();
@@ -384,21 +397,22 @@ void MainController::draw() {
     draw_lamp();
     draw_bulb();
     draw_skybox();
-    //swap_buffers
+
+
+    auto gaussian_blur_shader        = engine::core::Controller::get<engine::resources::ResourcesController>()->shader("gaussian_blur");
+    auto bloom_shader = engine::core::Controller::get<engine::resources::ResourcesController>()->shader("bloom");
+    graphics->bloom_end(gaussian_blur_shader, bloom_shader, 1.0f);
+
+    auto gui_controller = engine::core::Controller::get<GUIController>();
+    if (gui_controller && gui_controller->is_enabled()) {
+        gui_controller->draw();
+    }
+
 }
 
 void MainController::end_draw() {
     auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
 
-    auto gaussian_blur_shader        = engine::core::Controller::get<engine::resources::ResourcesController>()->shader("gaussian_blur");
-    auto bloom_shader = engine::core::Controller::get<engine::resources::ResourcesController>()->shader("bloom");
-
-    graphics->bloom_end(gaussian_blur_shader, bloom_shader, 1.0f);
-
-    auto gui_controller = engine::core::Controller::get<GUIController>();
-    if (gui_controller) {
-        gui_controller->draw();
-    }
 
     auto platform=engine::core::Controller::get<engine::platform::PlatformController>();
     platform->swap_buffers();
