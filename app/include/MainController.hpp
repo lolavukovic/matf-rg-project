@@ -42,6 +42,7 @@ private:
     bool spotlightEnabled=true;
     float lightTimer=0.0f;
 
+
 };
 };
 

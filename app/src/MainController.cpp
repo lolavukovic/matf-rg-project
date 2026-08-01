@@ -13,6 +13,8 @@
 #include <engine/core/Engine.hpp>
 #include <engine/graphics/GraphicsController.hpp>
 
+
+
 float beeAngle=0.0f;
 
 namespace app {
@@ -32,9 +34,13 @@ void MainPlatformEventObserver::on_mouse_move(engine::platform::MousePosition po
 
 
 void MainController::initialize() {
+    engine::graphics::OpenGL::enable_depth_testing();
+
     auto platform = engine::core::Controller::get<engine::platform::PlatformController>();
     platform->register_platform_event_observer(std::make_unique<MainPlatformEventObserver>());
-    engine::graphics::OpenGL::enable_depth_testing();
+
+    auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
+    graphics->initialize_bloom(platform->window()->width(), platform->window()->height());
 
 }
 
@@ -43,6 +49,7 @@ bool MainController::loop() {
     if (platform->key(engine::platform::KEY_ESCAPE).state() == engine::platform::Key::State::JustPressed) {
         return false;
     }
+
     return true;
 }
 
@@ -263,7 +270,7 @@ void MainController::draw_lamp() {
     else {
         shader->set_vec3("spotlight.ambient", glm::vec3(0.0f, 0.0f, 0.0f));
         shader->set_vec3("spotlight.diffuse", glm::vec3(0.0f));
-        shader->set_vec3("spotight.specular", glm::vec3(0.0f));
+        shader->set_vec3("spotlight.specular", glm::vec3(0.0f));
     }
 
     glm::mat4 model=glm::mat4(1.0f);
@@ -290,8 +297,13 @@ void MainController::draw_bulb() {
     model = glm::scale(model, glm::vec3(0.028f));
     bulbShader->set_mat4("model", model);
 
-    glm::vec3 warmYellowHDR = glm::vec3(10.0f, 8.5f, 4.0f);
-    bulbShader->set_vec3("lightColor", warmYellowHDR);
+    if (spotlightEnabled) {
+        glm::vec3 warmYellowHDR = glm::vec3(10.0f, 8.5f, 4.0f);
+        bulbShader->set_vec3("lightColor", warmYellowHDR);
+    }
+    else {
+        bulbShader->set_vec3("lightColor", glm::vec3(0.0f, 0.0f, 0.0f));
+    }
 
     bulbModel->draw(bulbShader);
 }
@@ -350,6 +362,8 @@ void MainController::update() {
 
 void MainController::begin_draw() {
     engine::graphics::OpenGL::clear_buffers();
+    auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
+    graphics->bloom_begin();
 }
 
 void MainController::draw_skybox() {
@@ -362,6 +376,7 @@ void MainController::draw_skybox() {
 
 
 void MainController::draw() {
+
     //clear_buffers
     draw_tree();
     draw_house();
@@ -373,6 +388,18 @@ void MainController::draw() {
 }
 
 void MainController::end_draw() {
+    auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
+
+    auto gaussian_blur_shader        = engine::core::Controller::get<engine::resources::ResourcesController>()->shader("gaussian_blur");
+    auto bloom_shader = engine::core::Controller::get<engine::resources::ResourcesController>()->shader("bloom");
+
+    graphics->bloom_end(gaussian_blur_shader, bloom_shader, 1.0f);
+
+    auto gui_controller = engine::core::Controller::get<GUIController>();
+    if (gui_controller) {
+        gui_controller->draw();
+    }
+
     auto platform=engine::core::Controller::get<engine::platform::PlatformController>();
     platform->swap_buffers();
 }
