@@ -9,6 +9,7 @@
 #include <engine/core/Controller.hpp>
 #include <engine/graphics/Camera.hpp>
 #include <engine/platform/PlatformEventObserver.hpp>
+#include <engine/graphics/Bloom.hpp>
 
 struct ImGuiContext;
 
@@ -57,6 +58,21 @@ enum ProjectionType {
 class GraphicsController final : public core::Controller {
 public:
     std::string_view name() const override;
+
+    Bloom* bloom() { return &m_bloom; }
+
+    void initialize_bloom(int width, int height) {
+        m_bloom.init(width, height);
+    }
+
+    void bloom_begin() {
+        m_bloom.begin();
+    }
+
+    void bloom_end(engine::resources::Shader* blurShader, engine::resources::Shader* bloomShader, float exposure = 1.0f) {
+        m_bloom.render(blurShader, bloomShader, exposure);
+    }
+
 
     /**
     * @brief Calls internal methods for the beginning of gui drawing. Should be called in pair with @ref GraphicsController::end_gui.
@@ -160,6 +176,8 @@ private:
     void initialize() override;
 
     void terminate();
+
+    Bloom m_bloom;
 
     PerspectiveMatrixParams m_perspective_params{};
     OrthographicMatrixParams m_ortho_params{};

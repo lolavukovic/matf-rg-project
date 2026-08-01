@@ -42,6 +42,7 @@ void GraphicsController::initialize() {
 }
 
 void GraphicsController::terminate() {
+    m_bloom.cleanup();
     if (ImGui::GetCurrentContext()) {
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
