@@ -6,7 +6,11 @@
 
 #include "MainController.hpp"
 #include "engine/graphics/GraphicsController.hpp"
+
 #include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+
 #include <engine/platform/PlatformController.hpp>
 
 namespace app {
@@ -16,30 +20,38 @@ void GUIController::initialize() {
 }
 
 void GUIController::draw() {
+
+    if (!is_enabled()) {
+        return;
+    }
+
     auto graphics=engine::core::Controller::get<engine::graphics::GraphicsController>();
     graphics->begin_gui();
 
     auto mainController=engine::core::Controller::get<MainController>();
-    ImGui::SetNextWindowSize(ImVec2(300, 130), ImGuiCond_Always);
-    ImGui::Begin("Lightning");
 
-    ImGui::SliderFloat("Ambient",
-                   &mainController->ambientStrength,
-                   0.0f, 1.0f);
+    if (mainController) {
+        ImGui::SetNextWindowSize(ImVec2(300, 130), ImGuiCond_Always);
+        ImGui::Begin("Lightning");
 
-    ImGui::SliderFloat("Diffuse",
-                       &mainController->diffuseStrength,
-                       0.0f, 2.0f);
+        ImGui::SliderFloat("Ambient",
+                       &mainController->ambientStrength,
+                       0.0f, 1.0f);
 
-    ImGui::SliderFloat("Specular",
-                       &mainController->specularStrength,
-                       0.0f, 2.0f);
+        ImGui::SliderFloat("Diffuse",
+                           &mainController->diffuseStrength,
+                           0.0f, 2.0f);
 
-    ImGui::SliderFloat3("Direction",
-                        &mainController->lightDirection.x,
-                        -1.0f, 1.0f);
+        ImGui::SliderFloat("Specular",
+                           &mainController->specularStrength,
+                           0.0f, 2.0f);
 
-    ImGui::End();
+        ImGui::SliderFloat3("Direction",
+                            &mainController->lightDirection.x,
+                            -1.0f, 1.0f);
+
+        ImGui::End();
+    }
 
     graphics->end_gui();
 }
@@ -50,6 +62,5 @@ void GUIController::poll_events() {
         set_enable(!is_enabled());
     }
 }
-
 
 }

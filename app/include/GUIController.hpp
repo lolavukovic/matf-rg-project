@@ -10,12 +10,16 @@ namespace app {
 class GUIController : public engine::core::Controller{
     void initialize() override;
 public:
+
+    ~GUIController() override = default;
+
     std::string_view name() const override {
         return "GUIController";
     }
+    void draw() override;
+
 
 private:
-    void draw() override;
 
     void poll_events() override;
 
