@@ -48,6 +48,7 @@ void GraphicsController::terminate() {
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
     }
+    m_point_shadow.cleanup();
 }
 
 void GraphicsPlatformEventObserver::on_window_resize(int width, int height) {

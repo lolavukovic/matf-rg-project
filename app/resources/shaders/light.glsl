@@ -70,10 +70,47 @@ uniform Material material;
 uniform DirLight dirlight;
 uniform SpotLight spotlight;
 
+uniform sampler2D texture_diffuse1;
+
+uniform samplerCube depthMap;
+uniform vec3 lightPos;
+uniform float far_plane;
+uniform bool shadows;
+
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 texColor);
 
+vec3 sampleOffsetDirections[20] = vec3[](
+   vec3( 1,  1,  1), vec3( 1, -1,  1), vec3(-1, -1,  1), vec3(-1,  1,  1),
+   vec3( 1,  1, -1), vec3( 1, -1, -1), vec3(-1, -1, -1), vec3(-1,  1, -1),
+   vec3( 1,  1,  0), vec3( 1, -1,  0), vec3(-1, -1,  0), vec3(-1,  1,  0),
+   vec3( 1,  0,  1), vec3(-1,  0,  1), vec3( 1,  0, -1), vec3(-1,  0, -1),
+   vec3( 0,  1,  1), vec3( 0, -1,  1), vec3( 0, -1, -1), vec3( 0,  1, -1)
+);
+
+float ShadowCalculation(vec3 fragPos) {
+    vec3 fragToLight = fragPos - lightPos;
+    float currentDepth = length(fragToLight);
+
+    float shadow = 0.0;
+    float bias = 0.15;
+    int samples = 20;
+
+    float viewDistance = length(viewPos - fragPos);
+    float diskRadius = (0.1 + (viewDistance / far_plane)) / 25.0;
+
+    for(int i = 0; i < samples; ++i) {
+        float closestDepth = texture(depthMap, fragToLight + sampleOffsetDirections[i] * diskRadius).r;
+        closestDepth *= far_plane;
+        if(currentDepth - bias > closestDepth)
+            shadow += 1.0;
+    }
+    shadow /= float(samples);
+
+    return shadow;
+}
+
 void main() {
-    vec3 texColor = texture(material.tex, TexCoords).rgb;
+    vec3 texColor = texture(texture_diffuse1, TexCoords).rgb;
 
     //ambient
     vec3 ambient = dirlight.ambient * material.ambient * texColor;
@@ -104,6 +141,7 @@ void main() {
 
 }
 
+
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 texColor){
     vec3 lightDir=normalize(light.position - fragPos);
 
@@ -122,9 +160,12 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec
     float epsilon=light.cutOff - light.outerCutOff;
     float intensity = clamp((theta-light.outerCutOff) / epsilon, 0.0, 1.0);
 
+    float shadow=shadows ? ShadowCalculation(fragPos): 0.0;
+    float shadowFactor=1.0-shadow;
+
     vec3 ambient=light.ambient * material.ambient * texColor * light.color;
-    vec3 diffuse = light.diffuse * material.diffuse * diff * texColor * light.color;
-    vec3 specular=light.specular * material.specular * spec * light.color;
+    vec3 diffuse = light.diffuse * material.diffuse * diff * texColor * light.color * shadowFactor;
+    vec3 specular=light.specular * material.specular * spec * light.color * shadowFactor;
 
     ambient *= attenuation;
     diffuse *= attenuation * intensity;

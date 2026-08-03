@@ -15,7 +15,6 @@
 #include <engine/graphics/GraphicsController.hpp>
 
 
-
 float beeAngle=0.0f;
 
 namespace app {
@@ -52,7 +51,7 @@ void MainController::initialize() {
 
     auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
     graphics->initialize_bloom(platform->window()->width(), platform->window()->height());
-
+    graphics->init_pointshadow(1024, 1024);
 }
 
 bool MainController::loop() {
@@ -64,36 +63,78 @@ bool MainController::loop() {
     return true;
 }
 
-void MainController::draw_tree() {
-    //Model
-    auto resources=engine::core::Controller::get<engine::resources::ResourcesController>();
-    auto graphics=engine::core::Controller::get<engine::graphics::GraphicsController>();
-    engine::resources::Model* tree=resources->model("tree");
-    //Shader
-    engine::resources::Shader* shader=resources->shader("light");
+
+void MainController::render_scene_geometry(engine::resources::Shader* shadowShader) {
+    auto resources = engine::core::Controller::get<engine::resources::ResourcesController>();
+
+    shadowShader->use();
+    // Tree
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3(0.0f, -1.0f, -4.0f));
+    model = glm::scale(model, glm::vec3(0.65f));
+    shadowShader->set_mat4("model", model);
+    resources->model("tree")->draw(shadowShader);
+
+    // House
+    model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3(2.5f, -1.0f, -4.0f));
+    model = glm::rotate(model, glm::radians(10.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    model = glm::scale(model, glm::vec3(0.083f));
+    shadowShader->set_mat4("model", model);
+    resources->model("house")->draw(shadowShader);
+
+    // Bee
+    float radius = 0.8f;
+    float x = radius * cos(beeAngle);
+    float z = -3.0f + radius * sin(beeAngle);
+    float y = 1.3f + 0.1f * sin(beeAngle * 4.0f);
+
+    model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3(x, y, z));
+    model = glm::rotate(model, glm::radians(-70.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    model = glm::scale(model, glm::vec3(0.025f));
+    shadowShader->set_mat4("model", model);
+    resources->model("bee")->draw(shadowShader);
+
+    // Lamp
+    model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3(1.26f, 0.62f, -2.7f));
+    model = glm::scale(model, glm::vec3(0.823f));
+    shadowShader->set_mat4("model", model);
+    resources->model("lamp")->draw(shadowShader);
+
+    // Ground
+    model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3(1.4f, -1.0f, -4.0f));
+    model = glm::scale(model, glm::vec3(1.0f));
+
+    shadowShader->set_mat4("model", model);
+    resources->model("ground")->draw(shadowShader);
+}
+
+
+void MainController::setup_light_shader_uniforms(engine::resources::Shader* shader) {
+    auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
+
     shader->use();
     shader->set_mat4("projection", graphics->projection_matrix());
     shader->set_mat4("view", graphics->camera()->view_matrix());
-
     shader->set_vec3("viewPos", graphics->camera()->Position);
-    shader->set_float("material.ambient", 0.3f);
-    shader->set_float("material.diffuse", 1.0f);
-    shader->set_float("material.specular", 0.0f);
-    shader->set_float("material.shiness", 8.0f);
 
-
+    // Directional light
     shader->set_vec3("dirlight.direction", lightDirection);
     shader->set_vec3("dirlight.ambient", glm::vec3(ambientStrength));
     shader->set_vec3("dirlight.diffuse", glm::vec3(diffuseStrength));
     shader->set_vec3("dirlight.specular", glm::vec3(specularStrength));
 
+    // Spotlight / Pointlight parametri
+    glm::vec3 lightPos = glm::vec3(1.3f, 0.7f, -2.8f); // Pozicija sijalice sa koje padaju senke
+    float farPlane = 25.0f;
 
-    shader->set_vec3("spotlight.position", glm::vec3(1.3f, 2.5f, -2.8f));
-    shader->set_vec3("spotlight.direction", glm::vec3(0.0f, -1.0f, 0.0f));
-
-    shader->set_float("spotlight.cutOff", glm::cos(glm::radians(12.5f)));
-    shader->set_float("spotlight.outerCutOff", glm::cos(glm::radians(17.5f)));
-
+    shader->set_vec3("spotlight.position", glm::vec3(1.3f, 0.7f, -2.8f));
+    shader->set_vec3("spotlight.direction", glm::vec3(-0.5f, -1.0f, -0.5f));
+    shader->set_float("spotlight.cutOff", glm::cos(glm::radians(30.5f)));
+    shader->set_float("spotlight.outerCutOff", glm::cos(glm::radians(40.5f)));
     shader->set_float("spotlight.constant", 1.0f);
     shader->set_float("spotlight.linear", 0.07f);
     shader->set_float("spotlight.quadratic", 0.032f);
@@ -102,14 +143,35 @@ void MainController::draw_tree() {
         shader->set_vec3("spotlight.ambient", glm::vec3(0.0f, 0.0f, 0.0f));
         shader->set_vec3("spotlight.diffuse", glm::vec3(3.0f, 3.0f, 3.0f));
         shader->set_vec3("spotlight.specular", glm::vec3(3.0f, 3.0f, 3.0f));
-
-        shader->set_vec3 ("spotlight.color",glm::vec3(1.0f, 0.8f, 0.3f));
-    }
-    else {
+        shader->set_vec3("spotlight.color", glm::vec3(1.0f, 0.8f, 0.3f));
+    } else {
         shader->set_vec3("spotlight.ambient", glm::vec3(0.0f, 0.0f, 0.0f));
         shader->set_vec3("spotlight.diffuse", glm::vec3(0.0f));
         shader->set_vec3("spotlight.specular", glm::vec3(0.0f));
     }
+
+    shader->set_bool("shadows", spotlightEnabled);
+    shader->set_vec3("lightPos", lightPos);
+    shader->set_float("far_plane", graphics->point_shadow_far_plane());
+
+    glActiveTexture(GL_TEXTURE10);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, graphics->cubemap_pointshadow());
+    shader->set_int("depthMap", 10);
+}
+
+void MainController::draw_tree() {
+    //Model
+    auto resources=engine::core::Controller::get<engine::resources::ResourcesController>();
+    auto graphics=engine::core::Controller::get<engine::graphics::GraphicsController>();
+    engine::resources::Model* tree=resources->model("tree");
+    //Shader
+    engine::resources::Shader* shader=resources->shader("light");
+    setup_light_shader_uniforms(shader);
+
+    shader->set_float("material.ambient", 0.3f);
+    shader->set_float("material.diffuse", 1.0f);
+    shader->set_float("material.specular", 0.0f);
+    shader->set_float("material.shiness", 8.0f);
 
     glm::mat4 model=glm::mat4(1.0f);
     model=glm::translate(model, glm::vec3(0.0f, -1.0f, -4.0f));
@@ -117,6 +179,32 @@ void MainController::draw_tree() {
     shader->set_mat4("model", model);
 
     tree->draw(shader);
+}
+
+
+
+void MainController::draw_ground() {
+    //Model
+    auto resources=engine::core::Controller::get<engine::resources::ResourcesController>();
+    auto graphics=engine::core::Controller::get<engine::graphics::GraphicsController>();
+    engine::resources::Model* ground=resources->model("ground");
+    //Shader
+    engine::resources::Shader* shader=resources->shader("light");
+    setup_light_shader_uniforms(shader);
+
+
+    shader->set_float("material.ambient", 0.3f);
+    shader->set_float("material.diffuse", 1.0f);
+    shader->set_float("material.specular", 0.0f);
+    shader->set_float("material.shiness", 1.0f);
+
+
+    glm::mat4 model=glm::mat4(1.0f);
+    model=glm::translate(model, glm::vec3(1.4f, -1.0f, -4.0f));
+    model=glm::scale(model, glm::vec3(2.7f));
+    shader->set_mat4("model", model);
+
+    ground->draw(shader);
 }
 
 
@@ -129,9 +217,9 @@ void MainController::draw_house() {
     //Shader
     engine::resources::Shader* shader=resources->shader("light");
 
-    shader->use();
-    shader->set_mat4("projection", graphics->projection_matrix());
-    shader->set_mat4("view", graphics->camera()->view_matrix());
+    setup_light_shader_uniforms(shader);
+
+
 
     shader->set_vec3("viewPos", graphics->camera()->Position);
     shader->set_float("material.ambient", 0.3f);
@@ -139,34 +227,6 @@ void MainController::draw_house() {
     shader->set_float("material.specular", 0.5f);
     shader->set_float("material.shiness", 32.0f);
 
-    shader->set_vec3("dirlight.direction", lightDirection);
-    shader->set_vec3("dirlight.ambient", glm::vec3(ambientStrength));
-    shader->set_vec3("dirlight.diffuse", glm::vec3(diffuseStrength));
-    shader->set_vec3("dirlight.specular", glm::vec3(specularStrength));
-
-
-    shader->set_vec3("spotlight.position", glm::vec3(1.3f, 2.5f, -2.8f));
-    shader->set_vec3("spotlight.direction", glm::vec3(0.0f, -1.0f, 0.0f));
-
-    shader->set_float("spotlight.cutOff", glm::cos(glm::radians(12.5f)));
-    shader->set_float("spotlight.outerCutOff", glm::cos(glm::radians(17.5f)));
-
-    shader->set_float("spotlight.constant", 1.0f);
-    shader->set_float("spotlight.linear", 0.07f);
-    shader->set_float("spotlight.quadratic", 0.032f);
-
-    if (spotlightEnabled) {
-        shader->set_vec3("spotlight.ambient", glm::vec3(0.0f, 0.0f, 0.0f));
-        shader->set_vec3("spotlight.diffuse", glm::vec3(3.0f, 3.0f, 3.0f));
-        shader->set_vec3("spotlight.specular", glm::vec3(3.0f, 3.0f, 3.0f));
-
-        shader->set_vec3 ("spotlight.color",glm::vec3(1.0f, 0.8f, 0.3f));
-    }
-    else {
-        shader->set_vec3("spotlight.ambient", glm::vec3(0.0f, 0.0f, 0.0f));
-        shader->set_vec3("spotlight.diffuse", glm::vec3(0.0f));
-        shader->set_vec3("spotlight.specular", glm::vec3(0.0f));
-    }
     glm::mat4 model=glm::mat4(1.0f);
     model=glm::translate(model, glm::vec3(2.5f, -1.0f, -4.0f));
     model=glm::rotate(model, glm::radians(10.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -182,6 +242,7 @@ void MainController::draw_bee() {
     engine::resources::Model* bee=resources->model("bee");
     //Shader
     engine::resources::Shader* shader=resources->shader("light");
+    setup_light_shader_uniforms(shader);
 
     float radius = 0.8f;
 
@@ -189,44 +250,12 @@ void MainController::draw_bee() {
     float z = -3.0f + radius * sin(beeAngle);
     float y = 1.3f + 0.1f * sin(beeAngle * 4.0f);
 
-    shader->use();
-    shader->set_mat4("projection", graphics->projection_matrix());
-    shader->set_mat4("view", graphics->camera()->view_matrix());
 
-    shader->set_vec3("viewPos", graphics->camera()->Position);
     shader->set_float("material.ambient", 0.3f);
     shader->set_float("material.diffuse", 1.0f);
     shader->set_float("material.specular", 0.5f);
     shader->set_float("material.shiness", 32.0f);
 
-    shader->set_vec3("dirlight.direction", lightDirection);
-    shader->set_vec3("dirlight.ambient", glm::vec3(ambientStrength));
-    shader->set_vec3("dirlight.diffuse", glm::vec3(diffuseStrength));
-    shader->set_vec3("dirlight.specular", glm::vec3(specularStrength));
-
-
-    shader->set_vec3("spotlight.position", glm::vec3(1.3f, 2.5f, -2.8f));
-    shader->set_vec3("spotlight.direction", glm::vec3(0.0f, -1.0f, 0.0f));
-
-    shader->set_float("spotlight.cutOff", glm::cos(glm::radians(12.5f)));
-    shader->set_float("spotlight.outerCutOff", glm::cos(glm::radians(17.5f)));
-
-    shader->set_float("spotlight.constant", 1.0f);
-    shader->set_float("spotlight.linear", 0.07f);
-    shader->set_float("spotlight.quadratic", 0.032f);
-
-    if (spotlightEnabled) {
-        shader->set_vec3("spotlight.ambient", glm::vec3(0.0f, 0.0f, 0.0f));
-        shader->set_vec3("spotlight.diffuse", glm::vec3(3.0f, 3.0f, 3.0f));
-        shader->set_vec3("spotlight.specular", glm::vec3(3.0f, 3.0f, 3.0f));
-
-        shader->set_vec3 ("spotlight.color",glm::vec3(1.0f, 0.8f, 0.3f));
-    }
-    else {
-        shader->set_vec3("spotlight.ambient", glm::vec3(0.0f, 0.0f, 0.0f));
-        shader->set_vec3("spotlight.diffuse", glm::vec3(0.0f));
-        shader->set_vec3("spotlight.specular", glm::vec3(0.0f));
-    }
 
     glm::mat4 model=glm::mat4(1.0f);
     model=glm::translate(model, glm::vec3(x,y,z));
@@ -243,49 +272,17 @@ void MainController::draw_lamp() {
     engine::resources::Model* lamp=resources->model("lamp");
     //Shader
     engine::resources::Shader* shader=resources->shader("light");
+    setup_light_shader_uniforms(shader);
 
-    shader->use();
-    shader->set_mat4("projection", graphics->projection_matrix());
-    shader->set_mat4("view", graphics->camera()->view_matrix());
 
-    shader->set_vec3("viewPos", graphics->camera()->Position);
     shader->set_float("material.ambient", 0.3f);
     shader->set_float("material.diffuse", 1.0f);
     shader->set_float("material.specular", 0.8f);
     shader->set_float("material.shiness", 32.0f);
 
-    shader->set_vec3("dirlight.direction", lightDirection);
-    shader->set_vec3("dirlight.ambient", glm::vec3(ambientStrength));
-    shader->set_vec3("dirlight.diffuse", glm::vec3(diffuseStrength));
-    shader->set_vec3("dirlight.specular", glm::vec3(specularStrength));
-
-
-    shader->set_vec3("spotlight.position", glm::vec3(1.3f, 2.5f, -2.8f));
-    shader->set_vec3("spotlight.direction", glm::vec3(0.0f, -1.0f, 0.0f));
-    shader->set_vec3 ("spotlight.color",glm::vec3(1.0f, 0.8f, 0.3f));
-
-    shader->set_float("spotlight.cutOff", glm::cos(glm::radians(12.5f)));
-    shader->set_float("spotlight.outerCutOff", glm::cos(glm::radians(17.5f)));
-
-    shader->set_float("spotlight.constant", 1.0f);
-    shader->set_float("spotlight.linear", 0.09f);
-    shader->set_float("spotlight.quadratic", 0.032f);
-
-    if (spotlightEnabled) {
-        shader->set_vec3("spotlight.ambient", glm::vec3(0.0f, 0.0f, 0.0f));
-        shader->set_vec3("spotlight.diffuse", glm::vec3(3.0f, 3.0f, 3.0f));
-        shader->set_vec3("spotlight.specular", glm::vec3(3.0f, 3.0f, 3.0f));
-
-        shader->set_vec3 ("spotlight.color",glm::vec3(1.0f, 0.8f, 0.3f));
-    }
-    else {
-        shader->set_vec3("spotlight.ambient", glm::vec3(0.0f, 0.0f, 0.0f));
-        shader->set_vec3("spotlight.diffuse", glm::vec3(0.0f));
-        shader->set_vec3("spotlight.specular", glm::vec3(0.0f));
-    }
 
     glm::mat4 model=glm::mat4(1.0f);
-    model=glm::translate(model, glm::vec3(1.3f, -1.0f, -2.8f));
+    model=glm::translate(model, glm::vec3(1.35f, -1.0f, -2.9f));
     model=glm::scale(model, glm::vec3(0.823f));
     shader->set_mat4("model", model);
     lamp->draw(shader);
@@ -304,7 +301,7 @@ void MainController::draw_bulb() {
 
 
     glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3(1.26f, 0.62f, -2.7f));
+    model = glm::translate(model, glm::vec3(1.3f, 0.7f, -2.8f));
     model = glm::scale(model, glm::vec3(0.028f));
     bulbShader->set_mat4("model", model);
 
@@ -386,12 +383,32 @@ void MainController::draw_skybox() {
 
 
 void MainController::draw() {
+    auto resources = engine::core::Controller::get<engine::resources::ResourcesController>();
+    auto graphics  = engine::core::Controller::get<engine::graphics::GraphicsController>();
+    auto platform  = engine::core::Controller::get<engine::platform::PlatformController>();
 
-    auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
+    glm::vec3 lightPos = glm::vec3(1.3f, 0.7f, -2.8f);
+    float nearPlane = 0.1f;
+    float farPlane = graphics->point_shadow_far_plane();
+    auto depthShader = resources->shader("point_shadow");
+
+    if (depthShader) {
+        graphics->begin_pointshadow(lightPos, nearPlane, farPlane, depthShader);
+
+        // Za depth mapu nam trebaju samo model matrice geometrije
+        render_scene_geometry(depthShader);
+
+        int screenWidth = platform->window()->width();
+        int screenHeight = platform->window()->height();
+        graphics->end_pointshadow(screenWidth, screenHeight);
+    }
+
+
     graphics->bloom_begin();
 
     //clear_buffers
     draw_tree();
+    draw_ground();
     draw_house();
     draw_bee();
     draw_lamp();

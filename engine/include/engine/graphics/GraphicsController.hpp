@@ -10,6 +10,7 @@
 #include <engine/graphics/Camera.hpp>
 #include <engine/platform/PlatformEventObserver.hpp>
 #include <engine/graphics/Bloom.hpp>
+#include <engine/graphics/PointShadow.hpp>
 
 struct ImGuiContext;
 
@@ -71,6 +72,31 @@ public:
 
     void bloom_end(engine::resources::Shader* blurShader, engine::resources::Shader* bloomShader, float exposure = 1.0f) {
         m_bloom.render(blurShader, bloomShader, exposure);
+    }
+
+
+    void init_pointshadow(unsigned int width = 1024, unsigned int height = 1024) {
+        m_point_shadow.init(width, height);
+    }
+
+    void begin_pointshadow(const glm::vec3& lightPos, float nearPlane, float farPlane, resources::Shader* depthShader) {
+        m_point_shadow.begin(lightPos, nearPlane, farPlane, depthShader);
+    }
+
+    void end_pointshadow(int screenWidth, int screenHeight) {
+        m_point_shadow.end(screenWidth, screenHeight);
+    }
+
+    unsigned int cubemap_pointshadow() const {
+        return m_point_shadow.depthCubemap();
+    }
+
+    float point_shadow_far_plane() const {
+        return m_point_shadow.far_plane();
+    }
+
+    void bind_point_shadow_depth_map(unsigned int texture_unit = 0) const {
+        m_point_shadow.bind_depth_map(texture_unit);
     }
 
 
@@ -185,6 +211,8 @@ private:
     glm::mat4 m_projection_matrix{};
     Camera m_camera{};
     ImGuiContext *m_imgui_context{};
+
+    PointShadow m_point_shadow;
 };
 
 /**

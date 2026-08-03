@@ -11,6 +11,7 @@
 #include <engine/core/Controller.hpp>
 #include <engine/platform/Input.hpp>
 #include <engine/platform/PlatformEventObserver.hpp>
+#include <engine/graphics/PointShadow.hpp>
 
 namespace  app {
 class MainController : public engine::core::Controller {
@@ -31,6 +32,7 @@ private:
     void draw_house();
     void draw_bee();
     void draw_lamp();
+    void draw_ground();
     void draw_bulb();
     void begin_draw() override;
     void draw() override;
@@ -42,6 +44,13 @@ private:
     bool spotlightEnabled=true;
     float lightTimer=0.0f;
 
+
+    glm::vec3 m_lightPos = glm::vec3(1.3f, 0.7f, -2.8f);
+    float m_farPlane = 25.0f;
+    float m_nearPlane = 0.1f;
+
+    void render_scene_geometry(engine::resources::Shader* shadowShader);
+    void setup_light_shader_uniforms(engine::resources::Shader* shader);
 
 };
 };
