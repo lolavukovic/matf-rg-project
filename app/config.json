@@ -19,6 +19,9 @@
       },
       "cube": {
         "path": "Cube/cube.obj"
+      },
+      "ground": {
+        "path": "Ground/ground.obj"
       }
     }
   },
