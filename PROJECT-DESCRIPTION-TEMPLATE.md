@@ -1,47 +1,56 @@
-# {NAME-OF-THE-PROJECT}
+# Countryside View
 
-{INDEX} - {STUDENT-FULL-NAME}  
-{PROJECT DESCRIPTION}
+mi23026 - Lola Vukovic
+
+A small 3D countryside scene featuring a house, a tree, a bee, a street lamp, and a textured ground.
+The scene uses multiple lighting techniques, point light shadows and HDR bloom. 
+The player can move and rotate the camera to explore the scene.
 
 ## Controls
 
-{BUTTON1} -> {ACTION1}  
-{BUTTON2} -> {ACTION2}  
-...  
-{BUTTONN} -> {ACTIONN}
+W -> Move the camera forward
+S -> Move the camera backward
+A -> Move the camera left
+D -> Move the camera right
+Mouse -> Rotate the camera
+L -> Trigger event sequence
+G -> Toggle GUI on/off
+ESC -> Exit the application
 
 ## Features
 
 ### Fundamental:
 
-[ ] Model with lighting
-[ ] Two types of lighting with customizable colors and movement through GUI or ACTIONS
-[ ] {ACTION_X} --- AFTER_M_SECONDS---Triggers---> {EVENT_A} ---> AFTER_N_SECONDS---Triggers---> {EVENT_B}
+[x] Model with lighting
+[x] Two types of lighting with customizable colors and movement through GUI or ACTIONS
+[x] L --- AFTER 2s --- Triggers ---> Spotlight turns off ---> AFTER 5s --- Triggers ---> Spotlight turns on again
 
 ### Group A:
 
 [ ] Frame-buffers with post-processing   
 [ ] Off-screen Anti-Aliasing  
 [ ] Parallax Mapping
-[ ] Bloom with the use of HDR
+[x] Bloom with the use of HDR
 
 ### Group B:
 [ ] Deferred Shading  
-[ ] Point Shadows  
+[x] Point Shadows  
 [ ] SSAO
 
 ### Engine improvement:
 
-[ ] ...
+[x] Event system implementation using timers
+[x] Animated bee with defined flight trajectory
 
 ## Models:
 
-[link1]   
-[link2]
+[tree] - https://drive.google.com/drive/folders/1rGiroKgGJwmihWMjpSVnW7n0gUPW_C18
+[house] - https://drive.google.com/drive/folders/1oFIpyDoByJMeDfcuMcvMx13f3yhd4CR8
+[ground] - https://drive.google.com/drive/folders/109Omzbp5Re4SlxfMs8aZESO3qFT1fSnb
+[lamp] - https://drive.google.com/drive/folders/1lwM7oVWp9G6VbkzNABTjHBwQcgmV7afm
+[bee] - https://drive.google.com/drive/folders/1MpbZ9mDl8RvCl7j79qEbx1pWug5bGWWT
 
-## Textures
 
-[link1]  
-[link2]
+## Skybox:
 
-{OTHER-RESOURCES}
+[skybox] - https://drive.google.com/drive/folders/1xCcu12wHY02cQWVeHhNNEcwAiAh9q7WZ
