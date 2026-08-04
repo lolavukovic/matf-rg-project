@@ -143,7 +143,7 @@ void MainController::setup_light_shader_uniforms(engine::resources::Shader* shad
         shader->set_vec3("spotlight.ambient", glm::vec3(0.0f, 0.0f, 0.0f));
         shader->set_vec3("spotlight.diffuse", glm::vec3(3.0f, 3.0f, 3.0f));
         shader->set_vec3("spotlight.specular", glm::vec3(3.0f, 3.0f, 3.0f));
-        shader->set_vec3("spotlight.color", glm::vec3(1.0f, 0.8f, 0.3f));
+        shader->set_vec3("spotlight.color", spotlightColor);
     } else {
         shader->set_vec3("spotlight.ambient", glm::vec3(0.0f, 0.0f, 0.0f));
         shader->set_vec3("spotlight.diffuse", glm::vec3(0.0f));
@@ -307,7 +307,7 @@ void MainController::draw_bulb() {
 
     if (spotlightEnabled) {
         glm::vec3 warmYellowHDR = glm::vec3(10.0f, 8.5f, 4.0f);
-        bulbShader->set_vec3("lightColor", warmYellowHDR);
+        bulbShader->set_vec3("lightColor", 15.0f*spotlightColor);
     }
     else {
         bulbShader->set_vec3("lightColor", glm::vec3(0.0f, 0.0f, 0.0f));

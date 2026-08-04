@@ -31,7 +31,7 @@ void GUIController::draw() {
     auto mainController=engine::core::Controller::get<MainController>();
 
     if (mainController) {
-        ImGui::SetNextWindowSize(ImVec2(300, 130), ImGuiCond_Always);
+        ImGui::SetNextWindowSize(ImVec2(300, 160), ImGuiCond_Always);
         ImGui::Begin("Lightning");
 
         ImGui::SliderFloat("Ambient",
@@ -49,6 +49,8 @@ void GUIController::draw() {
         ImGui::SliderFloat3("Direction",
                             &mainController->lightDirection.x,
                             -1.0f, 1.0f);
+
+        ImGui::ColorEdit3("Spotlight Color", &mainController->spotlightColor.x);
 
         ImGui::End();
     }

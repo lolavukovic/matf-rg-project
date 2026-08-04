@@ -24,6 +24,7 @@ public:
     float specularStrength=1.0f;
 
     glm::vec3 lightDirection=glm::vec3(0.7f, -1.0f, -0.3f);
+    glm::vec3 spotlightColor = glm::vec3(1.0f, 0.8f, 0.3f);
 
 private:
     void initialize() override;
