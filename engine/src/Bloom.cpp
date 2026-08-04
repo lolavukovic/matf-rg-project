@@ -18,7 +18,6 @@ void Bloom::init(int width, int height) {
     m_width = width;
     m_height = height;
 
-    // HDR
     glGenFramebuffers(1, &m_hdrFBO);
     glBindFramebuffer(GL_FRAMEBUFFER, m_hdrFBO);
 
@@ -47,7 +46,6 @@ void Bloom::init(int width, int height) {
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    // Ping-Pong Framebuffer-i za Gaussian Blur
     glGenFramebuffers(2, m_pingpongFBO);
     glGenTextures(2, m_pingpongColorbuffers);
     for (unsigned int i = 0; i < 2; i++) {
@@ -134,7 +132,6 @@ void Bloom::render(engine::resources::Shader* blurShader, engine::resources::Sha
     glBindTexture(GL_TEXTURE_2D, 0);
     glBindVertexArray(0);
 
-    // Vraćanje standardnih stanja
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

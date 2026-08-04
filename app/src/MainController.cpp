@@ -127,8 +127,8 @@ void MainController::setup_light_shader_uniforms(engine::resources::Shader* shad
     shader->set_vec3("dirlight.diffuse", glm::vec3(diffuseStrength));
     shader->set_vec3("dirlight.specular", glm::vec3(specularStrength));
 
-    // Spotlight / Pointlight parametri
-    glm::vec3 lightPos = glm::vec3(1.3f, 0.7f, -2.8f); // Pozicija sijalice sa koje padaju senke
+    // Spotlight
+    glm::vec3 lightPos = glm::vec3(1.3f, 0.7f, -2.8f);
     float farPlane = 25.0f;
 
     shader->set_vec3("spotlight.position", glm::vec3(1.3f, 0.7f, -2.8f));
@@ -160,11 +160,11 @@ void MainController::setup_light_shader_uniforms(engine::resources::Shader* shad
 }
 
 void MainController::draw_tree() {
-    //Model
+
     auto resources=engine::core::Controller::get<engine::resources::ResourcesController>();
     auto graphics=engine::core::Controller::get<engine::graphics::GraphicsController>();
     engine::resources::Model* tree=resources->model("tree");
-    //Shader
+
     engine::resources::Shader* shader=resources->shader("light");
     setup_light_shader_uniforms(shader);
 
@@ -184,11 +184,11 @@ void MainController::draw_tree() {
 
 
 void MainController::draw_ground() {
-    //Model
+
     auto resources=engine::core::Controller::get<engine::resources::ResourcesController>();
     auto graphics=engine::core::Controller::get<engine::graphics::GraphicsController>();
     engine::resources::Model* ground=resources->model("ground");
-    //Shader
+
     engine::resources::Shader* shader=resources->shader("light");
     setup_light_shader_uniforms(shader);
 
@@ -210,11 +210,11 @@ void MainController::draw_ground() {
 
 
 void MainController::draw_house() {
-    //Model
+
     auto resources=engine::core::Controller::get<engine::resources::ResourcesController>();
     auto graphics=engine::core::Controller::get<engine::graphics::GraphicsController>();
     engine::resources::Model* house=resources->model("house");
-    //Shader
+
     engine::resources::Shader* shader=resources->shader("light");
 
     setup_light_shader_uniforms(shader);
@@ -236,11 +236,11 @@ void MainController::draw_house() {
 }
 
 void MainController::draw_bee() {
-    //Model
+
     auto resources=engine::core::Controller::get<engine::resources::ResourcesController>();
     auto graphics=engine::core::Controller::get<engine::graphics::GraphicsController>();
     engine::resources::Model* bee=resources->model("bee");
-    //Shader
+
     engine::resources::Shader* shader=resources->shader("light");
     setup_light_shader_uniforms(shader);
 
@@ -266,11 +266,11 @@ void MainController::draw_bee() {
 }
 
 void MainController::draw_lamp() {
-    //Model
+
     auto resources=engine::core::Controller::get<engine::resources::ResourcesController>();
     auto graphics=engine::core::Controller::get<engine::graphics::GraphicsController>();
     engine::resources::Model* lamp=resources->model("lamp");
-    //Shader
+
     engine::resources::Shader* shader=resources->shader("light");
     setup_light_shader_uniforms(shader);
 
@@ -395,7 +395,7 @@ void MainController::draw() {
     if (depthShader) {
         graphics->begin_pointshadow(lightPos, nearPlane, farPlane, depthShader);
 
-        // Za depth mapu nam trebaju samo model matrice geometrije
+
         render_scene_geometry(depthShader);
 
         int screenWidth = platform->window()->width();
