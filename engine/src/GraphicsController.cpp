@@ -51,6 +51,10 @@ void GraphicsController::terminate() {
     m_point_shadow.cleanup();
 }
 
+void GraphicsController::set_viewport(int width, int height) {
+    glViewport(0, 0, width, height);
+}
+
 void GraphicsPlatformEventObserver::on_window_resize(int width, int height) {
     m_graphics->perspective_params().Width = static_cast<float>(width);
     m_graphics->perspective_params().Height = static_cast<float>(height);

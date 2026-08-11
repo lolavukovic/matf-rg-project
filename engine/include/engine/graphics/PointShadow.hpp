@@ -16,26 +16,26 @@ public:
     PointShadow() = default;
     ~PointShadow()=default;
 
-    void init(unsigned int shadowWidth = 1024, unsigned int shadowHeight = 1024);
+    void init(unsigned int shadow_width = 1024, unsigned int shadow_height = 1024);
 
-    void begin(const glm::vec3& lightPos, float nearPlane, float farPlane, engine::resources::Shader* depthShader);
+    void begin(const glm::vec3& light_pos, float near_plane, float far_plane, engine::resources::Shader* depth_shader);
 
-    void end(int screenWidth, int screenHeight);
+    void end(int screen_width, int screen_height);
 
-    unsigned int depthCubemap() const { return m_depthCubemap; }
+    unsigned int depth_cubemap() const { return m_depth_cubemap; }
 
     void bind_depth_map(unsigned int texture_unit = 0) const;
 
-    float far_plane() const { return m_farPlane; }
+    float far_plane() const { return m_far_plane; }
 
     void cleanup();
 
 private:
-    unsigned int m_shadowFBO = 0;
-    unsigned int m_depthCubemap = 0;
-    unsigned int m_shadowWidth = 1024;
-    unsigned int m_shadowHeight = 1024;
-    float m_farPlane = 25.0f;
+    unsigned int m_shadow_fbo = 0;
+    unsigned int m_depth_cubemap = 0;
+    unsigned int m_shadow_width = 1024;
+    unsigned int m_shadow_height = 1024;
+    float m_far_plane = 25.0f;
 };
 }
 

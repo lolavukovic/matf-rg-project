@@ -60,6 +60,8 @@ class GraphicsController final : public core::Controller {
 public:
     std::string_view name() const override;
 
+    void set_viewport(int width, int height);
+
     Bloom* bloom() { return &m_bloom; }
 
     void initialize_bloom(int width, int height) {
@@ -70,8 +72,8 @@ public:
         m_bloom.begin();
     }
 
-    void bloom_end(engine::resources::Shader* blurShader, engine::resources::Shader* bloomShader, float exposure = 1.0f) {
-        m_bloom.render(blurShader, bloomShader, exposure);
+    void bloom_end(engine::resources::Shader* blur_shader, engine::resources::Shader* bloom_shader, float exposure = 1.0f) {
+        m_bloom.render(blur_shader, bloom_shader, exposure);
     }
 
 
@@ -79,16 +81,16 @@ public:
         m_point_shadow.init(width, height);
     }
 
-    void begin_pointshadow(const glm::vec3& lightPos, float nearPlane, float farPlane, resources::Shader* depthShader) {
-        m_point_shadow.begin(lightPos, nearPlane, farPlane, depthShader);
+    void begin_pointshadow(const glm::vec3& light_pos, float near_plane, float far_plane, resources::Shader* depth_shader) {
+        m_point_shadow.begin(light_pos, near_plane, far_plane, depth_shader);
     }
 
-    void end_pointshadow(int screenWidth, int screenHeight) {
-        m_point_shadow.end(screenWidth, screenHeight);
+    void end_pointshadow(int screen_width, int screen_height) {
+        m_point_shadow.end(screen_width, screen_height);
     }
 
     unsigned int cubemap_pointshadow() const {
-        return m_point_shadow.depthCubemap();
+        return m_point_shadow.depth_cubemap();
     }
 
     float point_shadow_far_plane() const {

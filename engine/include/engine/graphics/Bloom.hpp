@@ -17,23 +17,22 @@ public:
 
     void init(int width, int height);
     void begin();
-    void render(engine::resources::Shader* blurShader, engine::resources::Shader* bloomShader, float exposure = 1.0f);
+    void render(engine::resources::Shader* blur_shader, engine::resources::Shader* bloom_shader, float exposure = 1.0f);
     void cleanup();
+    void render_quad();
 
 private:
     int m_width = 0;
     int m_height = 0;
 
-    unsigned int m_hdrFBO = 0;
-    unsigned int m_colorBuffers[2] = {0, 0};
-    unsigned int m_pingpongFBO[2] = {0, 0};
-    unsigned int m_pingpongColorbuffers[2] = {0, 0};
-    unsigned int m_rboDepth = 0;
+    unsigned int m_hdr_fbo = 0;
+    unsigned int m_color_buffers[2] = {0, 0};
+    unsigned int m_pingpong_fbo[2] = {0, 0};
+    unsigned int m_pingpong_colorbuffers[2] = {0, 0};
+    unsigned int m_rbo_depth = 0;
 
-    unsigned int m_quadVAO = 0;
-    unsigned int m_quadVBO = 0;
-
-    void render_quad();
+    unsigned int m_quad_vao = 0;
+    unsigned int m_quad_vbo = 0;
 };
 
 } // namespace engine::graphics

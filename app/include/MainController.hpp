@@ -19,12 +19,12 @@ public:
     std::string_view name() const override {
         return "app::MainController";
     }
-    float ambientStrength=0.3f;
-    float diffuseStrength=0.7f;
-    float specularStrength=1.0f;
+    float ambient_strength=0.3f;
+    float diffuse_strength=0.7f;
+    float specular_strength=1.0f;
 
-    glm::vec3 lightDirection=glm::vec3(0.7f, -1.0f, -0.3f);
-    glm::vec3 spotlightColor = glm::vec3(1.0f, 0.8f, 0.3f);
+    glm::vec3 light_direction=glm::vec3(0.7f, -1.0f, -0.3f);
+    glm::vec3 spotlight_color = glm::vec3(1.0f, 0.8f, 0.3f);
 
 private:
     void initialize() override;
@@ -41,16 +41,18 @@ private:
     void update() override;
     void update_camera();
     void draw_skybox();
-    bool lightSequenceStarted=false;
-    bool spotlightEnabled=true;
-    float lightTimer=0.0f;
 
 
-    glm::vec3 m_lightPos = glm::vec3(1.3f, 0.7f, -2.8f);
-    float m_farPlane = 25.0f;
-    float m_nearPlane = 0.1f;
+    bool m_light_sequence_started=false;
+    bool m_spotlight_enabled=true;
+    float m_light_timer=0.0f;
 
-    void render_scene_geometry(engine::resources::Shader* shadowShader);
+
+    glm::vec3 m_light_pos = glm::vec3(1.3f, 0.7f, -2.8f);
+    float m_far_plane = 25.0f;
+    float m_near_plane = 0.1f;
+
+    void render_scene_geometry(engine::resources::Shader* shadow_shader);
     void setup_light_shader_uniforms(engine::resources::Shader* shader);
 
 };

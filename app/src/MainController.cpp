@@ -2,9 +2,8 @@
 // Created by lola on 7/19/26.
 //
 
-#include "../include/MainController.hpp"
+#include <MainController.hpp>
 
-#include "../../engine/libs/glad/include/glad/glad.h"
 #include "GUIController.hpp"
 #include "spdlog/spdlog.h"
 #include <engine/graphics/Camera.hpp>
@@ -39,7 +38,7 @@ void MainPlatformEventObserver::on_window_resize(int width, int height) {
     graphics->perspective_params().Width = static_cast<float>(width);
     graphics->perspective_params().Height = static_cast<float>(height);
 
-    glViewport(0,0,width,height);
+    graphics->set_viewport(width, height);
 }
 
 
@@ -122,10 +121,10 @@ void MainController::setup_light_shader_uniforms(engine::resources::Shader* shad
     shader->set_vec3("viewPos", graphics->camera()->Position);
 
     // Directional light
-    shader->set_vec3("dirlight.direction", lightDirection);
-    shader->set_vec3("dirlight.ambient", glm::vec3(ambientStrength));
-    shader->set_vec3("dirlight.diffuse", glm::vec3(diffuseStrength));
-    shader->set_vec3("dirlight.specular", glm::vec3(specularStrength));
+    shader->set_vec3("dirlight.direction", light_direction);
+    shader->set_vec3("dirlight.ambient", glm::vec3(ambient_strength));
+    shader->set_vec3("dirlight.diffuse", glm::vec3(diffuse_strength));
+    shader->set_vec3("dirlight.specular", glm::vec3(specular_strength));
 
     // Spotlight
     glm::vec3 lightPos = glm::vec3(1.3f, 0.7f, -2.8f);
@@ -139,23 +138,24 @@ void MainController::setup_light_shader_uniforms(engine::resources::Shader* shad
     shader->set_float("spotlight.linear", 0.07f);
     shader->set_float("spotlight.quadratic", 0.032f);
 
-    if (spotlightEnabled) {
+    if (m_spotlight_enabled) {
         shader->set_vec3("spotlight.ambient", glm::vec3(0.0f, 0.0f, 0.0f));
         shader->set_vec3("spotlight.diffuse", glm::vec3(3.0f, 3.0f, 3.0f));
         shader->set_vec3("spotlight.specular", glm::vec3(3.0f, 3.0f, 3.0f));
-        shader->set_vec3("spotlight.color", spotlightColor);
+        shader->set_vec3("spotlight.color", spotlight_color);
     } else {
         shader->set_vec3("spotlight.ambient", glm::vec3(0.0f, 0.0f, 0.0f));
         shader->set_vec3("spotlight.diffuse", glm::vec3(0.0f));
         shader->set_vec3("spotlight.specular", glm::vec3(0.0f));
     }
 
-    shader->set_bool("shadows", spotlightEnabled);
+    shader->set_bool("shadows", m_spotlight_enabled);
     shader->set_vec3("lightPos", lightPos);
     shader->set_float("far_plane", graphics->point_shadow_far_plane());
 
-    glActiveTexture(GL_TEXTURE10);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, graphics->cubemap_pointshadow());
+    graphics->bind_point_shadow_depth_map(10);
+    shader->set_int("depthMap", 10);
+
     shader->set_int("depthMap", 10);
 }
 
@@ -305,9 +305,9 @@ void MainController::draw_bulb() {
     model = glm::scale(model, glm::vec3(0.028f));
     bulbShader->set_mat4("model", model);
 
-    if (spotlightEnabled) {
+    if (m_spotlight_enabled) {
         glm::vec3 warmYellowHDR = glm::vec3(10.0f, 8.5f, 4.0f);
-        bulbShader->set_vec3("lightColor", 15.0f*spotlightColor);
+        bulbShader->set_vec3("lightColor", 15.0f*spotlight_color);
     }
     else {
         bulbShader->set_vec3("lightColor", glm::vec3(0.0f, 0.0f, 0.0f));
@@ -350,19 +350,19 @@ void MainController::update() {
 
     beeAngle += dt;
     if (platform->key(engine::platform::KEY_L).state()==engine::platform::Key::State::JustPressed) {
-        lightSequenceStarted=true;
-        lightTimer=0.0f;
-        spotlightEnabled=true;
+        m_light_sequence_started=true;
+        m_light_timer=0.0f;
+        m_spotlight_enabled=true;
     }
 
-    if (lightSequenceStarted) {
-        lightTimer+=dt;
-        if (lightTimer>=2.0f && lightTimer<7.0f) {
-            spotlightEnabled=false;
+    if (m_light_sequence_started) {
+        m_light_timer+=dt;
+        if (m_light_timer>=2.0f && m_light_timer<7.0f) {
+            m_spotlight_enabled=false;
         }
-        if (lightTimer>=7.0f) {
-            spotlightEnabled=true;
-            lightSequenceStarted=false;
+        if (m_light_timer>=7.0f) {
+            m_spotlight_enabled=true;
+            m_light_sequence_started=false;
         }
     }
 }

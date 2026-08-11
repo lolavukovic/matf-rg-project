@@ -2,7 +2,7 @@
 // Created by lola on 7/21/26.
 //
 
-#include "../include/GUIController.hpp"
+#include "GUIController.hpp"
 
 #include "MainController.hpp"
 #include "engine/graphics/GraphicsController.hpp"
@@ -31,26 +31,26 @@ void GUIController::draw() {
     auto mainController=engine::core::Controller::get<MainController>();
 
     if (mainController) {
-        ImGui::SetNextWindowSize(ImVec2(300, 160), ImGuiCond_Always);
+        ImGui::SetNextWindowSize(ImVec2(340, 160), ImGuiCond_Always);
         ImGui::Begin("Lightning");
 
         ImGui::SliderFloat("Ambient",
-                       &mainController->ambientStrength,
+                       &mainController->ambient_strength,
                        0.0f, 1.0f);
 
         ImGui::SliderFloat("Diffuse",
-                           &mainController->diffuseStrength,
+                           &mainController->diffuse_strength,
                            0.0f, 2.0f);
 
         ImGui::SliderFloat("Specular",
-                           &mainController->specularStrength,
+                           &mainController->specular_strength,
                            0.0f, 2.0f);
 
         ImGui::SliderFloat3("Direction",
-                            &mainController->lightDirection.x,
+                            &mainController->light_direction.x,
                             -1.0f, 1.0f);
 
-        ImGui::ColorEdit3("Spotlight Color", &mainController->spotlightColor.x);
+        ImGui::ColorEdit3("Spotlight Color", &mainController->spotlight_color.x);
 
         ImGui::End();
     }
