@@ -30,6 +30,9 @@ void GraphicsController::initialize() {
     m_ortho_params.Near = 0.1f;
     m_ortho_params.Far = 100.0f;
 
+    m_bloom.init(platform->window()->width(), platform->window()->height());
+    m_point_shadow.initialize();
+
     platform->register_platform_event_observer(std::make_unique<GraphicsPlatformEventObserver>(this));
     CHECKED_GL_CALL(glViewport, 0, 0, platform->window()->width(), platform->window()->height());
 
@@ -48,7 +51,7 @@ void GraphicsController::terminate() {
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
     }
-    m_point_shadow.cleanup();
+    m_point_shadow.terminate();
 }
 
 void GraphicsController::set_viewport(int width, int height) {

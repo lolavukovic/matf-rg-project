@@ -64,10 +64,6 @@ public:
 
     Bloom* bloom() { return &m_bloom; }
 
-    void initialize_bloom(int width, int height) {
-        m_bloom.init(width, height);
-    }
-
     void bloom_begin() {
         m_bloom.begin();
     }
@@ -76,29 +72,8 @@ public:
         m_bloom.render(blur_shader, bloom_shader, exposure);
     }
 
-
-    void init_pointshadow(unsigned int width = 1024, unsigned int height = 1024) {
-        m_point_shadow.init(width, height);
-    }
-
-    void begin_pointshadow(const glm::vec3& light_pos, float near_plane, float far_plane, resources::Shader* depth_shader) {
-        m_point_shadow.begin(light_pos, near_plane, far_plane, depth_shader);
-    }
-
-    void end_pointshadow(int screen_width, int screen_height) {
-        m_point_shadow.end(screen_width, screen_height);
-    }
-
-    unsigned int cubemap_pointshadow() const {
-        return m_point_shadow.depth_cubemap();
-    }
-
-    float point_shadow_far_plane() const {
-        return m_point_shadow.far_plane();
-    }
-
-    void bind_point_shadow_depth_map(unsigned int texture_unit = 0) const {
-        m_point_shadow.bind_depth_map(texture_unit);
+    PointShadow* point_shadow() {
+        return &m_point_shadow;
     }
 
 

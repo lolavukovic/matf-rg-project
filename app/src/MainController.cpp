@@ -49,8 +49,7 @@ void MainController::initialize() {
     platform->register_platform_event_observer(std::make_unique<MainPlatformEventObserver>());
 
     auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
-    graphics->initialize_bloom(platform->window()->width(), platform->window()->height());
-    graphics->init_pointshadow(1024, 1024);
+
 }
 
 bool MainController::loop() {
@@ -151,9 +150,9 @@ void MainController::setup_light_shader_uniforms(engine::resources::Shader* shad
 
     shader->set_bool("shadows", m_spotlight_enabled);
     shader->set_vec3("lightPos", lightPos);
-    shader->set_float("far_plane", graphics->point_shadow_far_plane());
+    shader->set_float("far_plane", graphics->point_shadow()->far_plane());
 
-    graphics->bind_point_shadow_depth_map(10);
+    graphics->point_shadow()->bind_depth_map(10);
     shader->set_int("depthMap", 10);
 
     shader->set_int("depthMap", 10);
@@ -389,18 +388,18 @@ void MainController::draw() {
 
     glm::vec3 lightPos = glm::vec3(1.3f, 0.7f, -2.8f);
     float nearPlane = 0.1f;
-    float farPlane = graphics->point_shadow_far_plane();
+    float farPlane = graphics->point_shadow()->far_plane();
     auto depthShader = resources->shader("point_shadow");
 
     if (depthShader) {
-        graphics->begin_pointshadow(lightPos, nearPlane, farPlane, depthShader);
+        graphics->point_shadow()->begin(lightPos, nearPlane, farPlane, depthShader);
 
 
         render_scene_geometry(depthShader);
 
         int screenWidth = platform->window()->width();
         int screenHeight = platform->window()->height();
-        graphics->end_pointshadow(screenWidth, screenHeight);
+        graphics->point_shadow()->end(screenWidth, screenHeight);
     }
 
 

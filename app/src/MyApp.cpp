@@ -2,10 +2,6 @@
 // Created by lola on 7/19/26.
 //
 
-//#include <EnvironmentController.hpp>
-//#include <FlashlightController.hpp>
-//#include <GUIController.hpp>
-//#include <LampController.hpp>
 #include "GUIController.hpp"
 
 

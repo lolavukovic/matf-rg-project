@@ -8,7 +8,11 @@
 
 namespace engine::graphics {
 
-void PointShadow::init(unsigned int shadowWidth, unsigned int shadowHeight) {
+PointShadow::PointShadow() = default;
+
+PointShadow::~PointShadow() = default;
+
+void PointShadow::initialize(unsigned int shadowWidth, unsigned int shadowHeight) {
     m_shadow_width = shadowWidth;
     m_shadow_height = shadowHeight;
 
@@ -71,7 +75,7 @@ void PointShadow::bind_depth_map(unsigned int texture_unit) const {
 }
 
 
-void PointShadow::cleanup() {
+void PointShadow::terminate() {
     if (m_shadow_fbo) glDeleteFramebuffers(1, &m_shadow_fbo);
     if (m_depth_cubemap) glDeleteTextures(1, &m_depth_cubemap);
 }

@@ -13,10 +13,10 @@
 namespace engine::graphics {
 class PointShadow {
 public:
-    PointShadow() = default;
-    ~PointShadow()=default;
+    PointShadow();
+    ~PointShadow();
 
-    void init(unsigned int shadow_width = 1024, unsigned int shadow_height = 1024);
+    void initialize(unsigned int shadow_width = 1024, unsigned int shadow_height = 1024);
 
     void begin(const glm::vec3& light_pos, float near_plane, float far_plane, engine::resources::Shader* depth_shader);
 
@@ -28,7 +28,7 @@ public:
 
     float far_plane() const { return m_far_plane; }
 
-    void cleanup();
+    void terminate();
 
 private:
     unsigned int m_shadow_fbo = 0;
