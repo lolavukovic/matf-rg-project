@@ -1,11 +1,33 @@
 {
   "resources": {
     "models": {
+      "tree" : {
+        "path": "Tree/untitled.obj",
+        "flip_uvs": true
+      },
+      "house": {
+        "path": "House/cottage_blender.obj",
+        "flip_uvs": true
+      },
+      "bee": {
+        "path": "Bee/10006_Bumblebee_v1_L3.obj",
+        "flip_uvs": true
+      },
+      "lamp": {
+        "path": "Lamp/Street_Lamp_7.obj",
+        "flip_uvs": true
+      },
+      "cube": {
+        "path": "Cube/cube.obj"
+      },
+      "ground": {
+        "path": "Ground/ground.obj"
+      }
     }
   },
   "window": {
-    "height": 600,
+    "height": 900,
     "title": "Hello, window!",
-    "width": 800
+    "width": 1300
   }
 }
